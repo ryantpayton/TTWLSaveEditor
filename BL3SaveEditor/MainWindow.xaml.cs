@@ -23,6 +23,7 @@ using System.Windows.Navigation;
 using System.Diagnostics;
 using System.Reflection;
 using Xceed.Wpf.Toolkit;
+using System.Text.RegularExpressions;
 //using BL3Tools.GameData.Items;
 
 namespace TTWSaveEditor
@@ -888,10 +889,11 @@ namespace TTWSaveEditor
         private void PasteCodeBtn_Click(object sender, RoutedEventArgs e)
         {
             string serialCode = Clipboard.GetText();
-            Console.WriteLine("Pasting serial code: {0}", serialCode);
+            string replacement = Regex.Replace(serialCode, @"\t|\n|\r", "");
+            Console.WriteLine("Pasting serial code: {0}", replacement);
             try
             {
-                WonderlandsSerial item = WonderlandsSerial.DecryptSerial(serialCode);
+                WonderlandsSerial item = WonderlandsSerial.DecryptSerial(replacement);
                 if (item == null) return;
 
                 if (profile == null) saveGame.AddItem(item);
@@ -963,6 +965,21 @@ namespace TTWSaveEditor
             // Be nice and copy the code with a 0 seed (:
             string serialString = SelectedSerial.EncryptSerial(0);
             Console.WriteLine("Copying selected item code: {0}", serialString);
+
+            if (sender != null)
+            {
+                try
+                {
+                    WonderlandsSerial item = WonderlandsSerial.DecryptSerial(serialString);
+
+                    if (item != null)
+                    {
+                        serialString = $"{item.UserFriendlyName}:\r\n{serialString}";
+                        Console.WriteLine($"Selected Item Details:\r\nAmountRerolled:\t\t\t{item.AmountRerolled}\r\nBalance:\t\t\t\t{item.Balance}\r\nChecksum:\t\t\t\t{item.Checksum}\r\nInventoryData:\t\t\t{item.InventoryData}\r\nInventoryKey:\t\t\t{item.InventoryKey}\r\nItemType:\t\t\t\t{item.ItemType}\r\nLevel:\t\t\t\t\t{item.Level}\r\nManufacturer:\t\t\t{item.Manufacturer}\r\nSeed:\t\t\t\t\t{item.Seed}\r\nSerialDatabaseVersion:\t{item.SerialDatabaseVersion}\r\nSerialVersion:\t\t\t{item.SerialVersion}\r\nShortNameBalance\t\t{item.ShortNameBalance}\r\nUserFriendlyName\t\t{item.UserFriendlyName}");
+                    }
+                }
+                catch (Exception) { }
+            }
 
             // Copy it to the clipboard
             Clipboard.SetDataObject(serialString);
