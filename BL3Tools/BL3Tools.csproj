@@ -106,7 +106,6 @@
     <Compile Include="GameData\Items\InventoryKeyDB.cs" />
     <Compile Include="GameData\Items\InventoryNameDatabase.cs" />
     <Compile Include="GameData\Items\InventorySerialDatabase.cs" />
-    <Compile Include="GameData\Items\Borderlands3Serial.cs" />
     <Compile Include="GameData\Items\WonderlandsSerial.cs" />
     <Compile Include="GameData\SDU.cs" />
     <Compile Include="GVAS\GVASSave.cs" />
