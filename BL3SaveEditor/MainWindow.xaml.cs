@@ -431,7 +431,7 @@ namespace TTWSaveEditor
             // v1.0.0.0
             tbUpdates.Inlines.Add(new Run() { Text = $"v{Version}", FontWeight = FontWeights.Bold });
             tbUpdates.Inlines.Add(new LineBreak());
-            tbUpdates.Inlines.Add(new Run() { Text = "\t- Custom implementation based on TTWLSaveEdtior v1.1.6.7" });
+            tbUpdates.Inlines.Add(new Run() { Text = "\t- Custom implementation based on TTWSaveEdtior v1.1.6.7" });
             tbUpdates.Inlines.Add(new LineBreak());
             tbUpdates.Inlines.Add(new Run() { Text = "\t- Add ability to copy from Excel" });
             tbUpdates.Inlines.Add(new LineBreak());
