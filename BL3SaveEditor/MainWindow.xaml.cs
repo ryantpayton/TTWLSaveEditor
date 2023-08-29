@@ -990,9 +990,19 @@ namespace TTWSaveEditor
         }
         private void DuplicateItem_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            // This basically just clicks both the copy and paste button
-            CopyItem_Executed(null, e);
-            PasteCodeBtn.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            bool success = false;
+
+            while (!success)
+            {
+                try
+                {
+                    // This basically just clicks both the copy and paste button
+                    CopyItem_Executed(null, e);
+                    PasteCodeBtn.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                    success = true;
+                }
+                catch (Exception){ }
+            }
         }
         private void DeleteBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
