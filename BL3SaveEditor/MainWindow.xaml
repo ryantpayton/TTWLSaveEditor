@@ -2417,14 +2417,7 @@
                                 <LineBreak />
                             </TextBlock>
 
-                            <TextBlock FontSize="13" TextWrapping="Wrap">
-                                <Run FontWeight="Black" Text="v1.1.6.7" />
-                                <LineBreak />
-                                <Run Text="        • Supports REDUX v1.0.3 saves (via REDUX mode select)" />
-                                <LineBreak />
-                                <Run Text="        • For testing purposes only. BACKUP YOUR ORIGINAL SAVES BEFORE USING!" />
-                                <LineBreak />
-                            </TextBlock>
+                            <TextBlock FontSize="13" TextWrapping="Wrap" Name="tbUpdates" />
                         </WrapPanel>
                     </Grid>
 

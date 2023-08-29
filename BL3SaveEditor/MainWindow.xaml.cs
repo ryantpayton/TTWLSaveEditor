@@ -15,6 +15,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Navigation;
 using TTWSaveEditor.Helpers;
@@ -32,7 +33,7 @@ namespace TTWSaveEditor
     public partial class MainWindow
     {
         #region Databinding Data
-        public static string Version { get; private set; } = "1.1.6.7";
+        public static string Version { get; private set; } = "1.0.0.0";
 
         public static RoutedCommand DuplicateCommand { get; } = new RoutedCommand();
         public static RoutedCommand DeleteCommand { get; } = new RoutedCommand();
@@ -384,6 +385,7 @@ namespace TTWSaveEditor
             saveGame = null;
 
             InitializeComponent();
+
             DataContext = this;
 
             // Component initialization complete
@@ -425,6 +427,17 @@ namespace TTWSaveEditor
             }
 
             ((TabControl)FindName("TabCntrl")).SelectedIndex = ((TabControl)FindName("TabCntrl")).Items.Count - 1;
+
+            // v1.0.0.0
+            tbUpdates.Inlines.Add(new Run() { Text = $"v{Version}", FontWeight = FontWeights.Bold });
+            tbUpdates.Inlines.Add(new LineBreak());
+            tbUpdates.Inlines.Add(new Run() { Text = "\t- Custom implementation based on TTWLSaveEdtior v1.1.6.7" });
+            tbUpdates.Inlines.Add(new LineBreak());
+            tbUpdates.Inlines.Add(new Run() { Text = "\t- Add ability to copy from Excel" });
+            tbUpdates.Inlines.Add(new LineBreak());
+            tbUpdates.Inlines.Add(new Run() { Text = "\t- Added item name when copying item code" });
+            tbUpdates.Inlines.Add(new LineBreak());
+            tbUpdates.Inlines.Add(new Run() { Text = "\t- Fixed issue with Windows when copying code in certain situations" });
 
             //AutoUpdater.CheckForUpdateEvent += AutoUpdaterOnCheckForUpdateEvent;
             //AutoUpdater.RunUpdateAsAdmin = true;
