@@ -277,9 +277,7 @@
   <ItemGroup>
     <Resource Include="ttw_ico.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Starters\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
       <Visible>False</Visible>
