@@ -52,7 +52,7 @@
     <DisableFody>true</DisableFody>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>ttw_ico.ico</ApplicationIcon>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Single File|AnyCPU'">
     <OutputPath>bin\Single File\</OutputPath>
@@ -272,7 +272,7 @@
     <Resource Include="Icons\fugue\documents-text.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="ttw_ico.ico" />
+    <Resource Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

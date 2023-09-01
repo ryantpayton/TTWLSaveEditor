@@ -20,8 +20,8 @@ namespace WonderlandsTools
         {
             public class InvalidSaveException : Exception
             {
-                public InvalidSaveException() : base("Invalid TTW Save") { }
-                public InvalidSaveException(string saveGameType) : base(String.Format("Invalid TTW Save Game Type: {0}", saveGameType)) { }
+                public InvalidSaveException() : base("Invalid Wonderlands Save") { }
+                public InvalidSaveException(string saveGameType) : base(String.Format("Invalid Wonderlands Save Game Type: {0}", saveGameType)) { }
                 public InvalidSaveException(Platform platform) : base(String.Format("Incorrectly decrypted save game using the {0} platform; Are you sure you're using the right one?", platform)) { }
             }
 
@@ -30,7 +30,7 @@ namespace WonderlandsTools
             {
                 public bool knowCause = false;
 
-                public SerialParseException() : base("Invalid TTW Serial...") { }
+                public SerialParseException() : base("Invalid Wonderlands Serial...") { }
                 public SerialParseException(string serial) : base(String.Format("Invalid Serial: {0}", serial)) { }
                 public SerialParseException(string serial, int version) : base(String.Format("Invalid Serial: \"{0}\"; Version: {1}", serial, version)) { knowCause = true; }
                 public SerialParseException(string serial, int version, uint originalChecksum, uint calculatedChecksum) : base(String.Format("Invalid Serial: \"{0}\"; Serial Version: {1}; Checksum Difference: {2} vs {3}", serial, version, originalChecksum, calculatedChecksum)) { knowCause = true; }
