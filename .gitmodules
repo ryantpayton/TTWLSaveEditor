@@ -1,9 +1,9 @@
+[submodule "IOTools"]
+	path = IOTools
+	url = https://github.com/ryantpayton/IOTools
 [submodule "WonderlandsTools/Protobufs"]
 	path = WonderlandsTools/Protobufs
 	url = https://github.com/ryantpayton/WonderlandsProtos
 [submodule "WonderlandsTools/GameData/Items/SerialDB"]
 	path = WonderlandsTools/GameData/Items/SerialDB
 	url = https://github.com/ryantpayton/WonderlandsDumps
-[submodule "IOTools"]
-	path = IOTools
-	url = https://github.com/ryantpayton/IOTools
