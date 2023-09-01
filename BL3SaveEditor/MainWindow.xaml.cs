@@ -4,6 +4,7 @@ using BL3Tools;
 using BL3Tools.GameData;
 using BL3Tools.GameData.Items;
 using Microsoft.Win32;
+using OakSave;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,7 +12,8 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Text.RegularExpressions;
+using System.Net;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -33,16 +35,16 @@ namespace TTWSaveEditor
     public partial class MainWindow
     {
         #region Databinding Data
-        public static string Version { get; private set; } = "1.0.0.0";
+        public static string Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
         public static RoutedCommand DuplicateCommand { get; } = new RoutedCommand();
         public static RoutedCommand DeleteCommand { get; } = new RoutedCommand();
 
-        public int maximumXP { get; } = PlayerXP._XPMaximumLevel;
-        public int minimumXP { get; } = PlayerXP._XPMinimumLevel;
-        public int maximumMayhemLevel { get; } = MayhemLevel.MaximumLevel;
-        public bool bSaveLoaded { get; set; } = false;
-        public bool showDebugMaps { get; set; } = false;
+        public int MaximumXP { get; } = PlayerXP._XPMaximumLevel;
+        public int MinimumXP { get; } = PlayerXP._XPMinimumLevel;
+        public int MaximumMayhemLevel { get; } = MayhemLevel.MaximumLevel;
+        public bool SaveLoaded { get; set; } = false;
+        public bool ShowDebugMaps { get; set; } = false;
 
         private bool _ForceLegitParts = false;
 
@@ -60,68 +62,41 @@ namespace TTWSaveEditor
             }
         }
 
-        public ListCollectionView ValidPlayerClasses
-        {
-            get
-            {
-                return new ListCollectionView(BL3Save.ValidClasses.Keys.ToList());
-            }
-        }
-
-        public ListCollectionView ValidAbilityBranches
-        {
-            get
-            {
-                return new ListCollectionView(BL3Save.ValidAbilityBranches.Keys.ToList());
-            }
-        }
-
-        public ListCollectionView ValidPlayerAspect
-        {
-            get
-            {
-                return new ListCollectionView(BL3Save.ValidPlayerAspect.Keys.ToList());
-            }
-        }
-
-        public ListCollectionView ValidPlayerPronouns
-        {
-            get
-            {
-                return new ListCollectionView(BL3Save.ValidPlayerPronouns.Keys.ToList());
-            }
-        }
+        public ListCollectionView ValidPlayerClasses => new ListCollectionView(BL3Save.ValidClasses.Keys.ToList());
+        public ListCollectionView ValidAbilityBranches => new ListCollectionView(BL3Save.ValidAbilityBranches.Keys.ToList());
+        public ListCollectionView ValidPlayerAspect => new ListCollectionView(BL3Save.ValidPlayerAspect.Keys.ToList());
+        public ListCollectionView ValidPlayerPronouns => new ListCollectionView(BL3Save.ValidPlayerPronouns.Keys.ToList());
 
         public ListCollectionView SlotItems
         {
             get
             {
                 // Hasn't loaded a save/profile yet
-                if (saveGame == null && profile == null)
+                if (SaveGame == null && Profile == null)
                     return null;
 
                 ObservableCollection<StringSerialPair> px = new ObservableCollection<StringSerialPair>();
                 List<int> usedIndexes = new List<int>();
-                List<WonderlandsSerial> itemsToSearch = null;
+                List<WonderlandsSerial> itemsToSearch;
 
-                if (saveGame != null)
+                if (SaveGame != null)
                 {
-                    var equippedItems = saveGame.Character.EquippedInventoryLists;
+                    List<EquippedInventorySaveGameData> equippedItems = SaveGame.Character.EquippedInventoryLists;
 
-                    foreach (var item in equippedItems)
+                    foreach (EquippedInventorySaveGameData item in equippedItems)
                     {
-                        if (!item.Enabled || item.InventoryListIndex < 0 || item.InventoryListIndex > saveGame.InventoryItems.Count - 1)
+                        if (!item.Enabled || item.InventoryListIndex < 0 || item.InventoryListIndex > SaveGame.InventoryItems.Count - 1)
                             continue;
 
                         usedIndexes.Add(item.InventoryListIndex);
-                        px.Add(new StringSerialPair("Equipped", saveGame.InventoryItems[item.InventoryListIndex]));
+                        px.Add(new StringSerialPair("Equipped", SaveGame.InventoryItems[item.InventoryListIndex]));
                     }
 
-                    itemsToSearch = saveGame.InventoryItems;
+                    itemsToSearch = SaveGame.InventoryItems;
                 }
                 else
                 {
-                    itemsToSearch = profile.BankItems;
+                    itemsToSearch = Profile.BankItems;
                 }
 
                 for (int i = 0; i < itemsToSearch.Count; i++)
@@ -130,7 +105,7 @@ namespace TTWSaveEditor
                     if (usedIndexes.Contains(i))
                         continue;
 
-                    var serial = itemsToSearch[i];
+                    WonderlandsSerial serial = itemsToSearch[i];
 
                     // Split the items out into groups, assume weapons because they're the most numerous and different.
                     string itemType = "Weapons";
@@ -157,7 +132,7 @@ namespace TTWSaveEditor
             }
         }
 
-        public string[] ItemTypes = { "Normal", "Choatic", "Volatile", "Primordial", "Ascended" };
+        public string[] ItemTypes = { "Normal", "Chaotic", "Volatile", "Primordial", "Ascended" };
 
         public ListCollectionView ValidItemTypes
         {
@@ -166,7 +141,7 @@ namespace TTWSaveEditor
                 if (SelectedSerial == null)
                     return null;
 
-                var ItemLists = new List<string>();
+                List<string> ItemLists = new List<string>();
                 ItemLists.AddRange(ItemTypes);
 
                 return new ListCollectionView(ItemLists);
@@ -211,7 +186,7 @@ namespace TTWSaveEditor
 
                 string inventoryKey = SelectedSerial.InventoryKey;
 
-                var balances = InventoryKeyDB.KeyDictionary
+                List<string> balances = InventoryKeyDB.KeyDictionary
                     .Where(x => x.Value.Equals(inventoryKey) && !x.Key.Contains("partset"))
                     .Select(x => InventorySerialDatabase.GetShortNameFromBalance(x.Key))
                     .Where(x => !string.IsNullOrEmpty(x))
@@ -220,6 +195,7 @@ namespace TTWSaveEditor
                 return new ListCollectionView(balances);
             }
         }
+
         public string SelectedBalance
         {
             get
@@ -279,13 +255,7 @@ namespace TTWSaveEditor
             }
         }
 
-        public ListCollectionView InventoryDatas
-        {
-            get
-            {
-                return new ListCollectionView(InventorySerialDatabase.GetInventoryDatas());
-            }
-        }
+        public ListCollectionView InventoryDatas => new ListCollectionView(InventorySerialDatabase.GetInventoryDatas());
 
         public string SelectedInventoryData
         {
@@ -347,9 +317,9 @@ namespace TTWSaveEditor
                 {
                     validParts = InventorySerialDatabase.GetValidPartsForParts("InventoryGenericPartData", SelectedSerial.GenericParts);
 
-                    var vx = InventorySerialDatabase.GetValidPartsForParts("InventoryGenericPartData", SelectedSerial.Parts);
-                    var validGenerics = InventorySerialDatabase.GetValidGenericsForBalance(SelectedSerial.Balance);
-                    var itemType = InventoryKeyDB.ItemTypeToKey.LastOrDefault(x => x.Value.Contains(SelectedSerial.InventoryKey)).Key;
+                    List<string> vx = InventorySerialDatabase.GetValidPartsForParts("InventoryGenericPartData", SelectedSerial.Parts);
+                    List<string> validGenerics = InventorySerialDatabase.GetValidGenericsForBalance(SelectedSerial.Balance);
+                    string itemType = InventoryKeyDB.ItemTypeToKey.LastOrDefault(x => x.Value.Contains(SelectedSerial.InventoryKey)).Key;
                 }
 
                 return new ListCollectionView(validParts.Select(x => x.Split('.').Last()).ToList());
@@ -360,36 +330,37 @@ namespace TTWSaveEditor
         public int MaximumLostLootSDUs { get { return SDU.MaximumLostLoot; } }
         #endregion
 
-        //private static string UpdateURL = "";
+        private static readonly string UpdateURL = "https://ryan.paytonglobal.com/Wonderlands/AutoUpdater.xml";
 
         private static Debug.DebugConsole dbgConsole;
-        private bool bLaunched = false;
+        private readonly bool Launched = false;
+        private readonly bool UseCustomUpdater = false;
 
-        private readonly string initialDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "My Games", "Tiny Tina's Wonderlands", "Saved", "SaveGames");
+        private readonly string InitialDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "My Games", "Tiny Tina's Wonderlands", "Saved", "SaveGames");
 
         /// <summary>
         /// <para>The current profile object</para>
         /// <para>Will be null if we haven't loaded a profile</para>
         /// </summary>
-        public BL3Profile profile { get; set; } = null;
+        public BL3Profile Profile { get; set; } = null;
 
         /// <summary>
         /// <para>The current save game object</para>
         /// <para>Will be null if we loaded a profile instead of a save game</para>
         /// </summary>
-        public BL3Save saveGame { get; set; } = null;
+        public BL3Save SaveGame { get; set; } = null;
 
         public MainWindow()
         {
-            profile = null;
-            saveGame = null;
+            Profile = null;
+            SaveGame = null;
 
             InitializeComponent();
 
             DataContext = this;
 
             // Component initialization complete
-            bLaunched = true;
+            Launched = true;
 
             // Restore the dark mode state from last run
             CheckBox darkBox = (CheckBox)FindName("DarkModeBox");
@@ -428,29 +399,63 @@ namespace TTWSaveEditor
 
             ((TabControl)FindName("TabCntrl")).SelectedIndex = ((TabControl)FindName("TabCntrl")).Items.Count - 1;
 
-            // v1.0.0.0
-            tbUpdates.Inlines.Add(new Run() { Text = $"v{Version}", FontWeight = FontWeights.Bold });
+            tbUpdates.Inlines.Add(new Run() { Text = $"Current Version: v{Version}", FontWeight = FontWeights.Bold });
             tbUpdates.Inlines.Add(new LineBreak());
-            tbUpdates.Inlines.Add(new Run() { Text = "\t- Custom implementation based on TTWSaveEdtior v1.1.6.7" });
             tbUpdates.Inlines.Add(new LineBreak());
-            tbUpdates.Inlines.Add(new Run() { Text = "\t- Add ability to copy from Excel" });
-            tbUpdates.Inlines.Add(new LineBreak());
-            tbUpdates.Inlines.Add(new Run() { Text = "\t- Added item name when copying item code" });
-            tbUpdates.Inlines.Add(new LineBreak());
-            tbUpdates.Inlines.Add(new Run() { Text = "\t- Fixed issue with Windows when copying code in certain situations" });
 
-            //AutoUpdater.CheckForUpdateEvent += AutoUpdaterOnCheckForUpdateEvent;
-            //AutoUpdater.RunUpdateAsAdmin = true;
+            try
+            {
+                string line;
+                WebClient client = new WebClient();
+                Stream stream = client.OpenRead("https://ryan.paytonglobal.com/Wonderlands/changelog.md");
+                StreamReader reader = new StreamReader(stream);
 
-//#if !DEBUG
-//            AutoUpdater.Start(UpdateURL);
-//#endif
+                while ((line = reader.ReadLine()) != null)
+                {
+                    // Version
+                    if (line.StartsWith("####"))
+                    {
+                        int s = line.IndexOf("V");
+                        tbUpdates.Inlines.Add(new Run() { Text = line.Substring(s, line.Length - s), FontWeight = FontWeights.Bold });
+                    }
+                    // Change in the version
+                    else if (line.StartsWith("-"))
+                    {
+                        tbUpdates.Inlines.Add(new Run() { Text = $"\t{line}" });
+                        tbUpdates.Inlines.Add(new LineBreak());
+                    }
+                    else if (line == string.Empty)
+                    {
+                        tbUpdates.Inlines.Add(new LineBreak());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                tbUpdates.Inlines.Add(new Run() { Text = $"v{Version}", FontWeight = FontWeights.Bold });
+                tbUpdates.Inlines.Add(new LineBreak());
+                tbUpdates.Inlines.Add(new Run() { Text = "Could not fetch changelog." });
+
+#if DEBUG
+                tbUpdates.Inlines.Add(new LineBreak());
+                tbUpdates.Inlines.Add(new LineBreak());
+                tbUpdates.Inlines.Add(new Run() { Text = "ERROR:", FontWeight = FontWeights.Bold });
+                tbUpdates.Inlines.Add(new LineBreak());
+                tbUpdates.Inlines.Add(new Run() { Text = ex.Message });
+#endif
+            }
+
+            if (UseCustomUpdater)
+                AutoUpdater.CheckForUpdateEvent += AutoUpdaterOnCheckForUpdateEvent;
+
+            AutoUpdater.RunUpdateAsAdmin = true;
+            AutoUpdater.Start(UpdateURL);
         }
 
         #region Toolbar Interaction
         private void NewSaveBtn_Click(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine("New save made...");
+            throw new NotImplementedException();
         }
 
         private void OpenSaveBtn_Click(object sender, RoutedEventArgs e)
@@ -472,7 +477,7 @@ namespace TTWSaveEditor
                 {
                     Title = "Select Tiny Tina's Wonderlands Save/Profile",
                     Filter = string.Join("|", PlatformFilters.Values),
-                    InitialDirectory = initialDirectory,
+                    InitialDirectory = InitialDirectory,
                 };
 
                 if (fileDialog.ShowDialog() == true)
@@ -492,7 +497,7 @@ namespace TTWSaveEditor
                 {
                     Title = "Select Tiny Tina's Wonderlands Save/Profile",
                     Filter = string.Join("|", PlatformFilters.Values),
-                    InitialDirectory = initialDirectory,
+                    InitialDirectory = InitialDirectory,
                 };
 
                 if (fileDialog.ShowDialog() == true)
@@ -505,19 +510,17 @@ namespace TTWSaveEditor
 
         private void OpenSave(string filePath, Platform platform = Platform.PC)
         {
-#if !DEBUG
             try
             {
-#endif
                 // Reload the save just for safety, this way we're getting the "saved" version on a save.
                 object saveObj = BL3Tools.BL3Tools.LoadFileFromDisk(filePath, platform);
                 Console.WriteLine($"Reading a save of type: {saveObj.GetType()}");
 
                 if (saveObj.GetType() == typeof(BL3Profile))
                 {
-                    profile = (BL3Profile)saveObj;
-                    saveGame = null;
-                    bSaveLoaded = false;
+                    Profile = (BL3Profile)saveObj;
+                    SaveGame = null;
+                    SaveLoaded = false;
 
                     // Profile tab
                     TabCntrl.SelectedIndex = 5;
@@ -525,9 +528,9 @@ namespace TTWSaveEditor
                 }
                 else
                 {
-                    saveGame = (BL3Save)saveObj;
-                    profile = null;
-                    bSaveLoaded = true;
+                    SaveGame = (BL3Save)saveObj;
+                    Profile = null;
+                    SaveLoaded = true;
 
                     // General tab
                     TabCntrl.SelectedIndex = 0;
@@ -536,8 +539,8 @@ namespace TTWSaveEditor
                 ((TabItem)FindName("RawTabItem")).IsEnabled = true;
                 ((TabItem)FindName("InventoryTabItem")).IsEnabled = true;
 
-                ((Button)FindName("SaveSaveBtn")).IsEnabled = true;
-                ((Button)FindName("SaveAsSaveBtn")).IsEnabled = true;
+                ((Button)FindName("SaveBtn")).IsEnabled = true;
+                ((Button)FindName("SaveAsBtn")).IsEnabled = true;
 
                 // Refresh the bindings on the GUI
                 DataContext = null;
@@ -547,61 +550,59 @@ namespace TTWSaveEditor
                 BackpackListView.ItemsSource = SlotItems;
 
                 RefreshBackpackView();
-#if !DEBUG
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Failed to load save ({0}) :: {1}", filePath, ex.Message);
                 Console.WriteLine(ex.StackTrace);
 
-                MessageBox.Show($"Error parsing save: {ex.Message}", "Save Parse Exception", AdonisUI.Controls.MessageBoxButton.OK, AdonisUI.Controls.MessageBoxImage.Error);
+                MessageBox.Show($"Error parsing save: {ex.Message}", "Save Parse Exception", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-#endif
         }
 
         private void SaveOpenedFile()
         {
-            if (saveGame != null)
+            if (SaveGame != null)
             {
-                BL3Tools.BL3Tools.WriteFileToDisk(saveGame);
+                BL3Tools.BL3Tools.WriteFileToDisk(SaveGame);
             }
-            else if (profile != null)
+            else if (Profile != null)
             {
                 // TODO: Use the correct formula
                 // TODO: Split this to an function
                 int spentPoints = 0;
 
-                foreach (int points in profile.Profile.PlayerPrestige.PointsSpentByIndexOrders)
+                foreach (int points in Profile.Profile.PlayerPrestige.PointsSpentByIndexOrders)
                     spentPoints += points;
 
-                profile.Profile.PlayerPrestige.PrestigeExperience = PlayerXP.GetPointsForMythPoints(spentPoints);
+                Profile.Profile.PlayerPrestige.PrestigeExperience = PlayerXP.GetPointsForMythPoints(spentPoints);
 
-                BL3Tools.BL3Tools.WriteFileToDisk(profile);
+                BL3Tools.BL3Tools.WriteFileToDisk(Profile);
             }
 
 #if DEBUG
-            OpenSave(saveGame == null ? profile.filePath : saveGame.filePath);
+            OpenSave(SaveGame == null ? Profile.filePath : SaveGame.filePath);
 #endif
         }
 
-        private void SaveSaveBtn_Click(object sender, RoutedEventArgs e)
+        private void SaveBtn_Click(object sender, RoutedEventArgs e)
         {
             Console.WriteLine("Saving save...");
             SaveOpenedFile();
         }
 
-        private void SaveAsSaveBtn_Click(object sender, RoutedEventArgs e)
+        private void SaveAsBtn_Click(object sender, RoutedEventArgs e)
         {
             Console.WriteLine("Saving save as...");
-            SaveFileDialog saveFileDialog = null;
+            SaveFileDialog saveFileDialog;
 
-            if (saveGame.Platform == Platform.JSON)
+            if (SaveGame.Platform == Platform.JSON)
             {
                 saveFileDialog = new SaveFileDialog()
                 {
                     Title = "Save Tiny Tina's Wonderlands Save/Profile",
                     Filter = "PS4 Save Wizard Tiny Tina's Wonderlands Save/Profile (*)|*",
-                    InitialDirectory = initialDirectory
+                    InitialDirectory = InitialDirectory
                 };
             }
             else
@@ -610,15 +611,15 @@ namespace TTWSaveEditor
                 {
                     Title = "Save Tiny Tina's Wonderlands Save/Profile",
                     Filter = "Tiny Tina's Wonderlands Save/Profile (*.sav)|*.sav",
-                    InitialDirectory = initialDirectory
+                    InitialDirectory = InitialDirectory
                 };
             }
 
             // Update the file like this so that way, once you do a "Save As", it still changes the saved-as file instead of the originally opened file.
             if (saveFileDialog.ShowDialog() == true)
             {
-                if (saveGame != null) saveGame.filePath = saveFileDialog.FileName;
-                else if (profile != null) profile.filePath = saveFileDialog.FileName;
+                if (SaveGame != null) SaveGame.filePath = saveFileDialog.FileName;
+                else if (Profile != null) Profile.filePath = saveFileDialog.FileName;
             }
 
             SaveOpenedFile();
@@ -645,7 +646,7 @@ namespace TTWSaveEditor
         #region Theme Toggling
         private void DarkModeBox_Checked(object sender, RoutedEventArgs e)
         {
-            if (bLaunched)
+            if (Launched)
             {
                 bool bChecked = (bool)((CheckBox)sender).IsChecked;
                 ResourceLocator.SetColorScheme(Application.Current.Resources, bChecked ? ResourceLocator.DarkColorScheme : ResourceLocator.LightColorScheme);
@@ -676,22 +677,24 @@ namespace TTWSaveEditor
             {
                 Title = "Select BL3 Saves",
                 Filter = "BL3 Save (*.sav)|*.sav",
-                InitialDirectory = initialDirectory,
+                InitialDirectory = InitialDirectory,
                 Multiselect = true
             };
 
             if (fileDialog.ShowDialog() != true)
                 return;
 
-            int level = 0;
-            var msgBox = new Controls.IntegerMessageBox("Enter a level to sync saves to: ", "Level: ", minimumXP, maximumXP, maximumXP);
-            msgBox.Owner = this;
+            Controls.IntegerMessageBox msgBox = new Controls.IntegerMessageBox("Enter a level to sync saves to: ", "Level: ", MinimumXP, MaximumXP, MaximumXP)
+            {
+                Owner = this
+            };
+
             msgBox.ShowDialog();
 
             if (!msgBox.Succeeded)
                 return;
 
-            level = msgBox.Result;
+            int level = msgBox.Result;
 
             foreach (string file in fileDialog.FileNames)
             {
@@ -776,7 +779,7 @@ namespace TTWSaveEditor
         #region Character
         private void CharacterClass_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var str = e.AddedItems.OfType<string>().FirstOrDefault();
+            string str = e.AddedItems.OfType<string>().FirstOrDefault();
 
             if (str == null || str == default)
                 return;
@@ -792,7 +795,7 @@ namespace TTWSaveEditor
 
         private void FastTravelChkBx_StateChanged(object sender, RoutedEventArgs e)
         {
-            if (sender == null || saveGame == null)
+            if (sender == null || SaveGame == null)
                 return;
 
             CheckBox senderBx = (CheckBox)sender;
@@ -806,13 +809,13 @@ namespace TTWSaveEditor
 
             Console.WriteLine("Changed state of {0} ({2}) to {1}", fastTravelToChange, bFastTravelEnabled, assetPath);
 
-            int amtOfPlaythroughs = saveGame.Character.ActiveTravelStationsForPlaythroughs.Count - 1;
+            int amtOfPlaythroughs = SaveGame.Character.ActiveTravelStationsForPlaythroughs.Count - 1;
             int playthroughIndex = SelectedPlaythroughBox.SelectedIndex;
 
             if (amtOfPlaythroughs < SelectedPlaythroughBox.SelectedIndex)
-                saveGame.Character.ActiveTravelStationsForPlaythroughs.Add(new OakSave.PlaythroughActiveFastTravelSaveData());
+                SaveGame.Character.ActiveTravelStationsForPlaythroughs.Add(new OakSave.PlaythroughActiveFastTravelSaveData());
 
-            var travelStations = saveGame.Character.ActiveTravelStationsForPlaythroughs[playthroughIndex].ActiveTravelStations;
+            List<OakSave.ActiveFastTravelSaveData> travelStations = SaveGame.Character.ActiveTravelStationsForPlaythroughs[playthroughIndex].ActiveTravelStations;
 
             if (bFastTravelEnabled)
             {
@@ -859,21 +862,21 @@ namespace TTWSaveEditor
         private void RefreshBackpackView()
         {
             // Need to change the data context real quick to make the GUI update
-            var grid = ((Grid)FindName("SerialContentsGrid"));
+            Grid grid = (Grid)FindName("SerialContentsGrid");
             grid.DataContext = null;
             grid.DataContext = this;
 
-            var partsLabel = ((Label)FindName("PartsLabel"));
+            Label partsLabel = (Label)FindName("PartsLabel");
             partsLabel.DataContext = null;
             partsLabel.DataContext = this;
-            partsLabel = ((Label)FindName("GenericPartsLabel"));
+            partsLabel = (Label)FindName("GenericPartsLabel");
             partsLabel.DataContext = null;
             partsLabel.DataContext = this;
 
-            var addPartBtn = ((Button)FindName("GenericPartsAddBtn"));
+            Button addPartBtn = (Button)FindName("GenericPartsAddBtn");
             addPartBtn.DataContext = null;
             addPartBtn.DataContext = this;
-            addPartBtn = ((Button)FindName("PartsAddBtn"));
+            addPartBtn = (Button)FindName("PartsAddBtn");
             addPartBtn.DataContext = null;
             addPartBtn.DataContext = this;
         }
@@ -907,8 +910,8 @@ namespace TTWSaveEditor
                 return;
 
             // This janky bit of logic allows us to scroll on hover over the items of the ListView as well
-            var listview = (sender as ListView);
-            var scrollViewer = listview.FindVisualChildren<ScrollViewer>().First();
+            ListView listview = (sender as ListView);
+            ScrollViewer scrollViewer = listview.FindVisualChildren<ScrollViewer>().First();
 
             // Multiply the value by 0.7 because just the delta value can be a bit much
             scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - (e.Delta * 0.7));
@@ -925,7 +928,7 @@ namespace TTWSaveEditor
             // The user actually hit the save button and we have data about the item
             if (changer.SelectedInventoryData != null)
             {
-                var serial = WonderlandsSerial.CreateSerialFromBalanceData(changer.SelectedBalance);
+                WonderlandsSerial serial = WonderlandsSerial.CreateSerialFromBalanceData(changer.SelectedBalance);
 
                 if (serial == null)
                     return;
@@ -935,10 +938,10 @@ namespace TTWSaveEditor
                 // Set a manufacturer so that way the bindings don't lose their mind
                 serial.Manufacturer = InventorySerialDatabase.GetManufacturers().FirstOrDefault();
 
-                if (profile == null)
-                    saveGame.AddItem(serial);
+                if (Profile == null)
+                    SaveGame.AddItem(serial);
                 else
-                    profile.BankItems.Add(serial);
+                    Profile.BankItems.Add(serial);
 
                 BackpackListView.ItemsSource = null;
                 BackpackListView.ItemsSource = SlotItems;
@@ -949,11 +952,44 @@ namespace TTWSaveEditor
 
         private void PasteCodeBtn_Click(object sender, RoutedEventArgs e)
         {
-            string serialCode = Clipboard.GetText();
-            string replacement = Regex.Replace(serialCode, @"\t|\n|\r", "");
+            string clipboardData = string.Empty;
 
-            Console.WriteLine("Pasting serial code: {0}", replacement);
+            // This is to catch Clipboard COM errors
+            while (clipboardData == string.Empty)
+            {
+                try
+                {
+                    clipboardData = Clipboard.GetText();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
 
+            int firstPart;
+
+            if ((firstPart = clipboardData.IndexOf("WL(")) != -1)
+            {
+                int lastPart;
+                string serialCodeCheck = clipboardData.Substring(firstPart, clipboardData.Length - firstPart);
+
+                if ((lastPart = serialCodeCheck.IndexOf(")")) != -1)
+                {
+                    string serialCode = serialCodeCheck.Substring(0, lastPart + 1);
+                    Console.WriteLine("Pasting serial code: {0}", serialCode);
+
+                    CreateItemFromCode(serialCode);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Invalid WL item code.");
+            }
+        }
+
+        private void CreateItemFromCode(string replacement)
+        {
             try
             {
                 WonderlandsSerial item = WonderlandsSerial.DecryptSerial(replacement);
@@ -961,10 +997,10 @@ namespace TTWSaveEditor
                 if (item == null)
                     return;
 
-                if (profile == null)
-                    saveGame.AddItem(item);
+                if (Profile == null)
+                    SaveGame.AddItem(item);
                 else
-                    profile.BankItems.Add(item);
+                    Profile.BankItems.Add(item);
 
                 BackpackListView.ItemsSource = null;
                 BackpackListView.ItemsSource = SlotItems;
@@ -972,39 +1008,38 @@ namespace TTWSaveEditor
 
                 RefreshBackpackView();
 
-                var selectedValue = BackpackListView.Items.Cast<StringSerialPair>().Where(x => ReferenceEquals(x.Val2, item)).LastOrDefault();
+                StringSerialPair selectedValue = BackpackListView.Items.Cast<StringSerialPair>().Where(x => ReferenceEquals(x.Val2, item)).LastOrDefault();
                 BackpackListView.SelectedValue = selectedValue;
             }
             catch (BL3Tools.BL3Tools.BL3Exceptions.SerialParseException ex)
             {
-                string message = ex.Message;
-                Console.WriteLine($"Exception ({message}) parsing serial: {ex.ToString()}");
+                Console.WriteLine($"Exception ({ex.Message}) parsing serial: {ex}");
 
                 if (ex.knowCause)
-                    MessageBox.Show($"Error parsing serial: {ex.Message}", "Serial Parse Exception", AdonisUI.Controls.MessageBoxButton.OK, AdonisUI.Controls.MessageBoxImage.Error);
+                    MessageBox.Show($"Error parsing serial: {ex.Message}", "Serial Parse Exception", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             catch (Exception ex)
             {
                 string message = ex.Message;
-                Console.WriteLine($"Exception ({message}) parsing serial: {ex.ToString()}");
-                MessageBox.Show($"Error parsing serial: {ex.Message}", "Serial Parse Exception", AdonisUI.Controls.MessageBoxButton.OK, AdonisUI.Controls.MessageBoxImage.Error);
+                Console.WriteLine($"Exception ({message}) parsing serial: {ex}");
+                MessageBox.Show($"Error parsing serial: {message}", "Serial Parse Exception", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private void SyncEquippedBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (saveGame == null)
+            if (SaveGame == null)
                 return;
 
-            int levelToSync = PlayerXP.GetLevelForPoints(saveGame.Character.ExperiencePoints);
+            int levelToSync = PlayerXP.GetLevelForPoints(SaveGame.Character.ExperiencePoints);
 
-            foreach (var equipData in saveGame.Character.EquippedInventoryLists)
+            foreach (var equipData in SaveGame.Character.EquippedInventoryLists)
             {
-                if (!equipData.Enabled || equipData.InventoryListIndex < 0 || equipData.InventoryListIndex > saveGame.InventoryItems.Count - 1)
+                if (!equipData.Enabled || equipData.InventoryListIndex < 0 || equipData.InventoryListIndex > SaveGame.InventoryItems.Count - 1)
                     continue;
 
                 // Sync the level onto the item
-                saveGame.InventoryItems[equipData.InventoryListIndex].Level = levelToSync;
+                SaveGame.InventoryItems[equipData.InventoryListIndex].Level = levelToSync;
             }
 
             RefreshBackpackView();
@@ -1012,12 +1047,15 @@ namespace TTWSaveEditor
 
         private void SyncAllBtn_Click(object sender, RoutedEventArgs e)
         {
-            int levelToSync = -1;
+            int levelToSync;
 
-            if (profile != null)
+            if (Profile != null)
             {
-                var msgBox = new Controls.IntegerMessageBox("Please enter a level to sync your items for syncing", "Level: ", 0, maximumXP, maximumXP);
-                msgBox.Owner = this;
+                Controls.IntegerMessageBox msgBox = new Controls.IntegerMessageBox("Please enter a level to sync your items for syncing", "Level: ", 0, MaximumXP, MaximumXP)
+                {
+                    Owner = this
+                };
+
                 msgBox.ShowDialog();
 
                 if (!msgBox.Succeeded)
@@ -1027,12 +1065,13 @@ namespace TTWSaveEditor
             }
             else
             {
-                levelToSync = PlayerXP.GetLevelForPoints(saveGame.Character.ExperiencePoints);
+                levelToSync = PlayerXP.GetLevelForPoints(SaveGame.Character.ExperiencePoints);
             }
 
-            foreach (WonderlandsSerial item in (profile == null ? saveGame.InventoryItems : profile.BankItems))
+            foreach (WonderlandsSerial item in (Profile == null ? SaveGame.InventoryItems : Profile.BankItems))
             {
                 Console.WriteLine($"Syncing level for item ({item.UserFriendlyName}) from {item.Level} to {levelToSync}");
+
                 item.Level = levelToSync;
             }
 
@@ -1041,30 +1080,23 @@ namespace TTWSaveEditor
 
         private void CopyItem_Executed(object sender, ExecutedRoutedEventArgs e)
         {
+            string serialString = GetSelectedItemSerial();
+
+            Console.WriteLine("Copying selected item code: {0}", serialString);
+
+            string copyData = $"{SelectedSerial.UserFriendlyName}:\r\n{serialString}";
+
+            // Copy it to the clipboard
+            Clipboard.SetDataObject(copyData);
+        }
+
+        private string GetSelectedItemSerial()
+        {
             StringSerialPair svp = (StringSerialPair)BackpackListView.SelectedValue;
             SelectedSerial = svp.Val2;
 
             // Copy the code with a 0 seed
-            string serialString = SelectedSerial.EncryptSerial(0);
-            Console.WriteLine("Copying selected item code: {0}", serialString);
-
-            if (sender != null)
-            {
-                try
-                {
-                    WonderlandsSerial item = WonderlandsSerial.DecryptSerial(serialString);
-
-                    if (item != null)
-                    {
-                        serialString = $"{item.UserFriendlyName}:\r\n{serialString}";
-                        Console.WriteLine($"Selected Item Details:\r\nAmountRerolled:\t\t\t{item.AmountRerolled}\r\nBalance:\t\t\t\t{item.Balance}\r\nChecksum:\t\t\t\t{item.Checksum}\r\nInventoryData:\t\t\t{item.InventoryData}\r\nInventoryKey:\t\t\t{item.InventoryKey}\r\nItemType:\t\t\t\t{item.ItemType}\r\nLevel:\t\t\t\t\t{item.Level}\r\nManufacturer:\t\t\t{item.Manufacturer}\r\nSeed:\t\t\t\t\t{item.Seed}\r\nSerialDatabaseVersion:\t{item.SerialDatabaseVersion}\r\nSerialVersion:\t\t\t{item.SerialVersion}\r\nShortNameBalance\t\t{item.ShortNameBalance}\r\nUserFriendlyName\t\t{item.UserFriendlyName}");
-                    }
-                }
-                catch (Exception) { }
-            }
-
-            // Copy it to the clipboard
-            Clipboard.SetDataObject(serialString);
+            return SelectedSerial.EncryptSerial(0);
         }
 
         private void PasteItem_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -1074,43 +1106,33 @@ namespace TTWSaveEditor
 
         private void DuplicateItem_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            bool success = false;
+            string serialString = GetSelectedItemSerial();
 
-            while (!success)
-            {
-                try
-                {
-                    // This basically just clicks both the copy and paste button
-                    CopyItem_Executed(null, e);
-                    PasteCodeBtn.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-                    success = true;
-                }
-                catch (Exception) { }
-            }
+            Console.WriteLine("Duplicating selected item code: {0}", serialString);
+
+            CreateItemFromCode(serialString);
         }
 
         private void DeleteBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            StringSerialPair svp = BackpackListView.SelectedValue as StringSerialPair;
-
-            if (svp == null)
+            if (!(BackpackListView.SelectedValue is StringSerialPair svp))
                 return;
 
             Console.WriteLine("Deleting item: {0} ({1})", svp.Val1, svp.Val2.UserFriendlyName);
 
-            int idx = (saveGame == null ? profile.BankItems.FindIndex(x => ReferenceEquals(x, svp.Val2)) : saveGame.InventoryItems.FindIndex(x => ReferenceEquals(x, svp.Val2)));
+            int idx = (SaveGame == null ? Profile.BankItems.FindIndex(x => ReferenceEquals(x, svp.Val2)) : SaveGame.InventoryItems.FindIndex(x => ReferenceEquals(x, svp.Val2)));
 
-            if (saveGame == null)
+            if (SaveGame == null)
             {
-                profile.BankItems.RemoveAt(idx);
+                Profile.BankItems.RemoveAt(idx);
             }
             else
             {
                 // We need to preemptively adjust the equipped inventory lists so that way the equipped items stay consistent with the removed items
                 // TODO: Consider putting this into BL3Tools instead?
-                int eilIndex = saveGame.InventoryItems.FindIndex(x => ReferenceEquals(x, svp.Val2));
+                int eilIndex = SaveGame.InventoryItems.FindIndex(x => ReferenceEquals(x, svp.Val2));
 
-                foreach (var vx in saveGame.Character.EquippedInventoryLists)
+                foreach (EquippedInventorySaveGameData vx in SaveGame.Character.EquippedInventoryLists)
                 {
                     if (vx.InventoryListIndex == eilIndex)
                         vx.InventoryListIndex = -1;
@@ -1118,9 +1140,9 @@ namespace TTWSaveEditor
                         vx.InventoryListIndex -= 1;
                 }
 
-                saveGame.DeleteItem(svp.Val2);
+                SaveGame.DeleteItem(svp.Val2);
 
-                if (saveGame.InventoryItems.Count <= 0)
+                if (SaveGame.InventoryItems.Count <= 0)
                     SelectedSerial = null;
             }
 
@@ -1133,8 +1155,8 @@ namespace TTWSaveEditor
 
         private void ChangeItemTypeBtn_Click(object sender, RoutedEventArgs e)
         {
-            var itemKey = InventoryKeyDB.GetKeyForBalance(InventorySerialDatabase.GetBalanceFromShortName(SelectedBalance));
-            var itemType = InventoryKeyDB.ItemTypeToKey.Where(x => x.Value.Contains(itemKey)).Select(x => x.Key).FirstOrDefault();
+            string itemKey = InventoryKeyDB.GetKeyForBalance(InventorySerialDatabase.GetBalanceFromShortName(SelectedBalance));
+            string itemType = InventoryKeyDB.ItemTypeToKey.Where(x => x.Value.Contains(itemKey)).Select(x => x.Key).FirstOrDefault();
 
             Controls.ItemBalanceChanger changer = new Controls.ItemBalanceChanger(itemType, SelectedBalance) { Owner = this };
 
@@ -1152,8 +1174,8 @@ namespace TTWSaveEditor
 
         private void ChangeTypeBtn_Click(object sender, RoutedEventArgs e)
         {
-            var itemKey = InventoryKeyDB.GetKeyForBalance(InventorySerialDatabase.GetBalanceFromShortName(SelectedBalance));
-            var itemType = InventoryKeyDB.ItemTypeToKey.Where(x => x.Value.Contains(itemKey)).Select(x => x.Key).FirstOrDefault();
+            string itemKey = InventoryKeyDB.GetKeyForBalance(InventorySerialDatabase.GetBalanceFromShortName(SelectedBalance));
+            string itemType = InventoryKeyDB.ItemTypeToKey.Where(x => x.Value.Contains(itemKey)).Select(x => x.Key).FirstOrDefault();
 
             Controls.ItemBalanceChanger changer = new Controls.ItemBalanceChanger(itemType, SelectedBalance) { Owner = this };
 
@@ -1174,7 +1196,7 @@ namespace TTWSaveEditor
             if (SelectedSerial == null)
                 return;
 
-            var btn = (Button)sender;
+            Button btn = (Button)sender;
             ListView obj = ((ListView)FindName(btn.Name.Replace("AddBtn", "") + "ListView"));
             string propertyName = obj.Name.Split(new string[] { "ListView" }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
 
@@ -1192,13 +1214,13 @@ namespace TTWSaveEditor
             ValidParts.Refresh();
             ValidGenerics.Refresh();
 
-            obj.GetBindingExpression(ListView.ItemsSourceProperty).UpdateTarget();
+            obj.GetBindingExpression(ItemsControl.ItemsSourceProperty).UpdateTarget();
             RefreshBackpackView();
         }
 
         private void DuplicateItemPartBtn_Click(object sender, RoutedEventArgs e)
         {
-            var btn = (Button)sender;
+            Button btn = (Button)sender;
             ListView obj = ((ListView)FindName(btn.Name.Replace("DupBtn", "") + "ListView"));
 
             string propertyName = obj.Name.Split(new string[] { "ListView" }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
@@ -1210,9 +1232,9 @@ namespace TTWSaveEditor
 
             if (obj.SelectedIndex != -1)
             {
-                var longName = parts[obj.SelectedIndex];
-                var category = propertyName == "Parts" ? SelectedSerial.InventoryKey : "InventoryGenericPartData";
-                var p = InventorySerialDatabase.GetPartFromShortName(category, longName);
+                string longName = parts[obj.SelectedIndex];
+                string category = propertyName == "Parts" ? SelectedSerial.InventoryKey : "InventoryGenericPartData";
+                string p = InventorySerialDatabase.GetPartFromShortName(category, longName);
 
                 parts.Add(p);
 
@@ -1220,14 +1242,14 @@ namespace TTWSaveEditor
                 ValidParts.Refresh();
                 ValidGenerics.Refresh();
 
-                obj.GetBindingExpression(ListView.ItemsSourceProperty).UpdateTarget();
+                obj.GetBindingExpression(ItemsControl.ItemsSourceProperty).UpdateTarget();
                 RefreshBackpackView();
             }
         }
 
         private void DeleteItemPartBtn_Click(object sender, RoutedEventArgs e)
         {
-            var btn = (Button)sender;
+            Button btn = (Button)sender;
             ListView obj = ((ListView)FindName(btn.Name.Replace("DelBtn", "") + "ListView"));
             string propertyName = obj.Name.Split(new string[] { "ListView" }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
 
@@ -1238,7 +1260,7 @@ namespace TTWSaveEditor
 
             if (obj.SelectedIndex != -1)
             {
-                var longName = parts[obj.SelectedIndex];
+                string longName = parts[obj.SelectedIndex];
 
                 if (ForceLegitParts)
                 {
@@ -1248,7 +1270,7 @@ namespace TTWSaveEditor
 
                         if (part != longName && dependencies.Contains(longName))
                         {
-                            var result = MessageBox.Show("Are you sure you want to delete this part? If you do that, you'll make the item illegitimate.", "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
+                            MessageBoxResult result = MessageBox.Show("Are you sure you want to delete this part? If you do that, you'll make the item illegitimate.", "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
 
                             if (result == MessageBoxResult.No)
                             {
@@ -1274,7 +1296,7 @@ namespace TTWSaveEditor
             ValidParts.Refresh();
             ValidGenerics.Refresh();
 
-            obj.GetBindingExpression(ListView.ItemsSourceProperty).UpdateTarget();
+            obj.GetBindingExpression(ItemsControl.ItemsSourceProperty).UpdateTarget();
             RefreshBackpackView();
         }
 
@@ -1299,8 +1321,8 @@ namespace TTWSaveEditor
 
             // Get the last changed part and the new part
             // Old part is useful so that way we don't end up doing weird index updating shenanigans when the ComboBox updates
-            var newPart = e.AddedItems.Cast<string>().FirstOrDefault();
-            var oldPart = e.RemovedItems.Cast<string>().FirstOrDefault();
+            string newPart = e.AddedItems.Cast<string>().FirstOrDefault();
+            string oldPart = e.RemovedItems.Cast<string>().FirstOrDefault();
 
             if (newPart == default || oldPart == default)
                 return null;
@@ -1368,18 +1390,18 @@ namespace TTWSaveEditor
         #region Profile
         private void ClearLLBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (profile == null)
+            if (Profile == null)
                 return;
 
-            profile.LostLootItems.Clear();
+            Profile.LostLootItems.Clear();
         }
 
         private void ClearBankBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (profile == null)
+            if (Profile == null)
                 return;
 
-            profile.BankItems.Clear();
+            Profile.BankItems.Clear();
         }
 
         #region Customization Unlockers/Lockers
@@ -1395,15 +1417,15 @@ namespace TTWSaveEditor
                 if (lowerAsset.Contains("default") || (lowerAsset.Contains("emote") && (lowerAsset.Contains("wave") || lowerAsset.Contains("cheer") || lowerAsset.Contains("laugh") || lowerAsset.Contains("point"))))
                     continue;
 
-                if (!profile.Profile.UnlockedCustomizations.Any(x => x.CustomizationAssetPath.Equals(assetPath)))
+                if (!Profile.Profile.UnlockedCustomizations.Any(x => x.CustomizationAssetPath.Equals(assetPath)))
                 {
-                    var d = new OakSave.OakCustomizationSaveGameData
+                    OakSave.OakCustomizationSaveGameData d = new OakSave.OakCustomizationSaveGameData
                     {
                         CustomizationAssetPath = assetPath,
                         IsNew = true
                     };
 
-                    profile.Profile.UnlockedCustomizations.Add(d);
+                    Profile.Profile.UnlockedCustomizations.Add(d);
 
                     Console.WriteLine("Profile doesn't contain customization: {0}", assetPath);
                 }
@@ -1412,8 +1434,8 @@ namespace TTWSaveEditor
 
         private void LockCustomizations_Click(object sender, RoutedEventArgs e)
         {
-            profile.Profile.UnlockedCustomizations.Clear();
-            profile.Profile.UnlockedInventoryCustomizationParts.Clear();
+            Profile.Profile.UnlockedCustomizations.Clear();
+            Profile.Profile.UnlockedInventoryCustomizationParts.Clear();
         }
         #endregion
         #endregion
@@ -1449,8 +1471,10 @@ namespace TTWSaveEditor
                             args.DownloadURL = args.DownloadURL.Replace("-Portable", "");
 #endif
 
+#if !DEBUG
                             if (AutoUpdater.DownloadUpdate(args))
                                 Application.Current.Shutdown();
+#endif
                         }
                         catch (Exception exception)
                         {
@@ -1461,7 +1485,7 @@ namespace TTWSaveEditor
             }
             else
             {
-                if (args.Error is System.Net.WebException)
+                if (args.Error is WebException)
                     MessageBox.Show("There is a problem reaching update server. Please check your internet connection and try again later.", "Update Check Failed", MessageBoxButton.OK, MessageBoxImage.Error);
                 else
                     MessageBox.Show(args.Error.Message, args.Error.GetType().ToString(), MessageBoxButton.OK, MessageBoxImage.Error);
@@ -1470,19 +1494,17 @@ namespace TTWSaveEditor
 
         private void UpdateButton_Click(object sender, RoutedEventArgs e)
         {
-            //AutoUpdater.Start(UpdateURL);
+            AutoUpdater.Start(UpdateURL);
         }
 
-        private bool changeReduxMode()
+        private bool ChangeReduxMode()
         {
-            MessageBoxResult msgBoxResult = MessageBox.Show("Changing the REDUX mode will restart the application.\nYOU WILL LOSE ANY UNSAVED PROGRESS!\nAre you sure you want to proceed?", "REDUX Mode Change", MessageBoxButton.YesNo);
-
-            return msgBoxResult == MessageBoxResult.Yes;
+            return MessageBox.Show("Changing the REDUX mode will restart the application.\nYOU WILL LOSE ANY UNSAVED PROGRESS!\nAre you sure you want to proceed?", "REDUX Mode Change", MessageBoxButton.YesNo) == MessageBoxResult.Yes;
         }
 
         private void ReduxMode_Checked(object sender, RoutedEventArgs e)
         {
-            if (bLaunched)
+            if (Launched)
             {
                 bool rmChecked = (bool)ReduxMode.IsChecked;
 
@@ -1497,7 +1519,7 @@ namespace TTWSaveEditor
                     Properties.Settings.Default.Save();
 
                     // Verify restart
-                    if (changeReduxMode())
+                    if (ChangeReduxMode())
                     {
                         // Pass checked Redux mode bool value to BL3Tools setting
                         InventorySerialDatabase.setIsRedux(rmChecked);

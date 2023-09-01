@@ -128,8 +128,8 @@
             </Button>
 
             <Button
-                Name="SaveSaveBtn"
-                Click="SaveSaveBtn_Click"
+                Name="SaveBtn"
+                Click="SaveBtn_Click"
                 IsEnabled="False">
                 <StackPanel Orientation="Horizontal">
                     <Image
@@ -144,8 +144,8 @@
             </Button>
 
             <Button
-                Name="SaveAsSaveBtn"
-                Click="SaveAsSaveBtn_Click"
+                Name="SaveAsBtn"
+                Click="SaveAsBtn_Click"
                 IsEnabled="False">
                 <StackPanel Orientation="Horizontal">
                     <Image
@@ -166,7 +166,7 @@
             Margin="0,30,0,0"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch">
-            <TabItem IsEnabled="{Binding saveGame, TargetNullValue=False}">
+            <TabItem IsEnabled="{Binding SaveGame, TargetNullValue=False}">
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
                         <Image
@@ -199,8 +199,8 @@
                         Margin="116,40,418,0"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Top"
-                        IsEnabled="{Binding Path=bSaveLoaded}"
-                        Text="{Binding Path=saveGame.Character.SaveGameGuid, Mode=TwoWay}"
+                        IsEnabled="{Binding Path=SaveLoaded}"
+                        Text="{Binding Path=SaveGame.Character.SaveGameGuid, Mode=TwoWay}"
                         TextWrapping="Wrap"
                         ToolTip="A randomly generated ID of your save; do not touch unless you know what you're doing" />
                     <Button
@@ -227,9 +227,9 @@
                         Margin="116,70,328,0"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Top"
-                        IsEnabled="{Binding Path=bSaveLoaded}"
+                        IsEnabled="{Binding Path=SaveLoaded}"
                         ToolTip="A number associated with your save; do not touch unless you know what you're doing"
-                        Value="{Binding Path=saveGame.Character.SaveGameId, Mode=TwoWay}" />
+                        Value="{Binding Path=SaveGame.Character.SaveGameId, Mode=TwoWay}" />
 
                     <Label
                         Height="20"
@@ -243,9 +243,9 @@
                         Margin="116,95,328,0"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Top"
-                        IsEnabled="{Binding Path=bSaveLoaded}"
+                        IsEnabled="{Binding Path=SaveLoaded}"
                         ToolTip="Format: Days.Hours:Minutes:Seconds"
-                        Value="{Binding Path=saveGame.Character.TimePlayedSeconds, Mode=TwoWay, Converter={StaticResource IntegerToSpanConverter1}}" />
+                        Value="{Binding Path=SaveGame.Character.TimePlayedSeconds, Mode=TwoWay, Converter={StaticResource IntegerToSpanConverter1}}" />
                     <Label
                         Width="101"
                         Height="25"
@@ -263,11 +263,11 @@
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Top"
                         ItemsSource="{Binding Source={StaticResource PlatformDataSource}}"
-                        SelectedValue="{Binding Path=saveGame.Platform}" />
+                        SelectedValue="{Binding Path=SaveGame.Platform}" />
                 </Grid>
             </TabItem>
 
-            <TabItem IsEnabled="{Binding saveGame, TargetNullValue=False}">
+            <TabItem IsEnabled="{Binding SaveGame, TargetNullValue=False}">
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
                         <Image
@@ -320,8 +320,8 @@
                                         Margin="140,0,0,0"
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Top"
-                                        IsEnabled="{Binding bSaveLoaded}"
-                                        Text="{Binding Path=saveGame.Character.PreferredCharacterName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        IsEnabled="{Binding SaveLoaded}"
+                                        Text="{Binding Path=SaveGame.Character.PreferredCharacterName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                         TextWrapping="WrapWithOverflow" />
                                 </Grid>
 
@@ -341,9 +341,9 @@
                                         Margin="140,0,0,0"
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Top"
-                                        IsEnabled="{Binding Path=bSaveLoaded}"
+                                        IsEnabled="{Binding Path=SaveLoaded}"
                                         ItemsSource="{Binding Path=ValidPlayerPronouns}"
-                                        SelectedValue="{Binding saveGame.Character.PlayerPronounSelection, Mode=TwoWay, Converter={StaticResource PlayerPronounDataConverter1}}"
+                                        SelectedValue="{Binding SaveGame.Character.PlayerPronounSelection, Mode=TwoWay, Converter={StaticResource PlayerPronounDataConverter1}}"
                                         ToolTip="The pronoun of your character" />
                                 </Grid>
                                 <Label
@@ -360,8 +360,8 @@
                                     Margin="140,83,0,0"
                                     HorizontalAlignment="Stretch"
                                     VerticalAlignment="Top"
-                                    IsEnabled="{Binding bSaveLoaded}"
-                                    Text="{Binding saveGame.Character.NicknameMappings[0].Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    IsEnabled="{Binding SaveLoaded}"
+                                    Text="{Binding SaveGame.Character.NicknameMappings[0].Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                     TextWrapping="WrapWithOverflow" />
                             </Grid>
                         </GroupBox>
@@ -382,7 +382,7 @@
                                         VerticalAlignment="Top"
                                         VerticalContentAlignment="Center"
                                         Content="Secondary Class"
-                                        IsChecked="{Binding saveGame.Character.AbilityData.DualClassSaveData.UnlockedInitialSecondaryClass}" />
+                                        IsChecked="{Binding SaveGame.Character.AbilityData.DualClassSaveData.UnlockedInitialSecondaryClass}" />
                                 </Grid>
 
                                 <Grid Margin="0,48,0,0" VerticalAlignment="Top">
@@ -393,7 +393,7 @@
                                         VerticalAlignment="Top"
                                         VerticalContentAlignment="Center"
                                         Content="Weapon Slot #3"
-                                        IsChecked="{Binding saveGame.Character, ConverterParameter=Weapon3, Converter={StaticResource ItemSlotConverter1}}" />
+                                        IsChecked="{Binding SaveGame.Character, ConverterParameter=Weapon3, Converter={StaticResource ItemSlotConverter1}}" />
                                 </Grid>
 
                                 <Grid Margin="0,76,0,0" VerticalAlignment="Top">
@@ -404,7 +404,7 @@
                                         VerticalAlignment="Top"
                                         VerticalContentAlignment="Center"
                                         Content="Ring (Left)"
-                                        IsChecked="{Binding saveGame.Character, ConverterParameter=Ring1, Converter={StaticResource ItemSlotConverter1}}" />
+                                        IsChecked="{Binding SaveGame.Character, ConverterParameter=Ring1, Converter={StaticResource ItemSlotConverter1}}" />
                                 </Grid>
 
                                 <Grid Margin="0,104,0,0" VerticalAlignment="Top">
@@ -415,7 +415,7 @@
                                         VerticalAlignment="Top"
                                         VerticalContentAlignment="Center"
                                         Content="Ring (Right)"
-                                        IsChecked="{Binding saveGame.Character, ConverterParameter=Ring2, Converter={StaticResource ItemSlotConverter1}}" />
+                                        IsChecked="{Binding SaveGame.Character, ConverterParameter=Ring2, Converter={StaticResource ItemSlotConverter1}}" />
                                 </Grid>
 
                                 <Grid Margin="0,132,0,0" VerticalAlignment="Top">
@@ -426,7 +426,7 @@
                                         VerticalAlignment="Top"
                                         VerticalContentAlignment="Center"
                                         Content="Pauldron"
-                                        IsChecked="{Binding saveGame.Character, ConverterParameter=Pauldron, Converter={StaticResource ItemSlotConverter1}}" />
+                                        IsChecked="{Binding SaveGame.Character, ConverterParameter=Pauldron, Converter={StaticResource ItemSlotConverter1}}" />
                                 </Grid>
 
                                 <Grid Margin="0,160,0,0" VerticalAlignment="Top">
@@ -437,7 +437,7 @@
                                         VerticalAlignment="Top"
                                         VerticalContentAlignment="Center"
                                         Content="Amulet"
-                                        IsChecked="{Binding saveGame.Character, ConverterParameter=Amulet, Converter={StaticResource ItemSlotConverter1}}" />
+                                        IsChecked="{Binding SaveGame.Character, ConverterParameter=Amulet, Converter={StaticResource ItemSlotConverter1}}" />
                                 </Grid>
 
                                 <Grid Margin="0,188,0,0" VerticalAlignment="Top">
@@ -448,7 +448,7 @@
                                         VerticalAlignment="Top"
                                         VerticalContentAlignment="Center"
                                         Content="Secondary Spell"
-                                        IsChecked="{Binding saveGame.Character, ConverterParameter=SecondSpell, Converter={StaticResource ItemSlotConverter1}}" />
+                                        IsChecked="{Binding SaveGame.Character, ConverterParameter=SecondSpell, Converter={StaticResource ItemSlotConverter1}}" />
                                 </Grid>
                             </Grid>
                         </GroupBox>
@@ -478,11 +478,11 @@
                                         Margin="140,0,0,0"
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Top"
-                                        IsEnabled="{Binding bSaveLoaded}"
+                                        IsEnabled="{Binding SaveLoaded}"
                                         Maximum="100"
                                         Minimum="0"
                                         ToolTip="The unlocked level of Mayhem of your character."
-                                        Value="{Binding saveGame.Character.GameStateSaveDataForPlaythroughs[0].MayhemUnlockedLevel, Mode=TwoWay}" />
+                                        Value="{Binding SaveGame.Character.GameStateSaveDataForPlaythroughs[0].MayhemUnlockedLevel, Mode=TwoWay}" />
                                 </Grid>
 
                                 <Grid Margin="0,58,0,0" VerticalAlignment="Top">
@@ -502,11 +502,11 @@
                                         Margin="140,0,0,0"
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Top"
-                                        IsEnabled="{Binding bSaveLoaded}"
+                                        IsEnabled="{Binding SaveLoaded}"
                                         Maximum="100"
                                         Minimum="0"
                                         ToolTip="The current enabled level of Mayhem of your character."
-                                        Value="{Binding saveGame.Character.GameStateSaveDataForPlaythroughs[0].MayhemLevel, Mode=TwoWay}" />
+                                        Value="{Binding SaveGame.Character.GameStateSaveDataForPlaythroughs[0].MayhemLevel, Mode=TwoWay}" />
                                 </Grid>
                             </Grid>
                         </GroupBox>
@@ -542,11 +542,11 @@
                                         Margin="140,0,0,0"
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Top"
-                                        IsEnabled="{Binding Path=bSaveLoaded}"
-                                        Maximum="{Binding Path=maximumXP}"
-                                        Minimum="{Binding Path=minimumXP}"
+                                        IsEnabled="{Binding Path=SaveLoaded}"
+                                        Maximum="{Binding Path=MaximumXP}"
+                                        Minimum="{Binding Path=MinimumXP}"
                                         ToolTip="XP Level of your save"
-                                        Value="{Binding Path=saveGame.Character.ExperiencePoints, Mode=TwoWay, Converter={StaticResource EXPToLevelConverter1}}" />
+                                        Value="{Binding Path=SaveGame.Character.ExperiencePoints, Mode=TwoWay, Converter={StaticResource EXPToLevelConverter1}}" />
                                 </Grid>
 
                                 <Grid Margin="0,52,0,0" VerticalAlignment="Top">
@@ -565,10 +565,10 @@
                                         Margin="140,0,0,0"
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Top"
-                                        IsEnabled="{Binding Path=bSaveLoaded}"
+                                        IsEnabled="{Binding Path=SaveLoaded}"
                                         Minimum="0"
                                         ToolTip="Current skill points available on the save"
-                                        Value="{Binding saveGame.Character.AbilityData.AbilityPoints, Mode=TwoWay}" />
+                                        Value="{Binding SaveGame.Character.AbilityData.AbilityPoints, Mode=TwoWay}" />
                                 </Grid>
                             </Grid>
                         </GroupBox>
@@ -596,9 +596,9 @@
                                         Margin="140,0,0,0"
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Top"
-                                        IsEnabled="{Binding Path=bSaveLoaded}"
+                                        IsEnabled="{Binding Path=SaveLoaded}"
                                         ItemsSource="{Binding Path=ValidAbilityBranches}"
-                                        SelectedValue="{Binding Path=saveGame.Character.AbilityData.DualClassSaveData.PrimaryBranchPath, Mode=TwoWay, Converter={StaticResource StringToAbilityBranchConverter1}}"
+                                        SelectedValue="{Binding Path=SaveGame.Character.AbilityData.DualClassSaveData.PrimaryBranchPath, Mode=TwoWay, Converter={StaticResource StringToAbilityBranchConverter1}}"
                                         SelectionChanged="CharacterClass_SelectionChanged" />
                                 </Grid>
 
@@ -618,9 +618,9 @@
                                         Margin="140,0,0,0"
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Top"
-                                        IsEnabled="{Binding Path=bSaveLoaded}"
+                                        IsEnabled="{Binding Path=SaveLoaded}"
                                         ItemsSource="{Binding Path=ValidAbilityBranches}"
-                                        SelectedValue="{Binding Path=saveGame.Character.AbilityData.DualClassSaveData.SlottedSecondaryBranchPath, Mode=TwoWay, Converter={StaticResource StringToAbilityBranchConverter1}}"
+                                        SelectedValue="{Binding Path=SaveGame.Character.AbilityData.DualClassSaveData.SlottedSecondaryBranchPath, Mode=TwoWay, Converter={StaticResource StringToAbilityBranchConverter1}}"
                                         SelectionChanged="CharacterClass_SelectionChanged" />
                                 </Grid>
                             </Grid>
@@ -649,9 +649,9 @@
                                         Margin="140,0,0,0"
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Top"
-                                        IsEnabled="{Binding Path=bSaveLoaded}"
+                                        IsEnabled="{Binding Path=SaveLoaded}"
                                         ItemsSource="{Binding Path=ValidPlayerAspect}"
-                                        SelectedValue="{Binding Path=saveGame.Character.HeroPointsSaveData.PlayerAspectDataPath, Mode=TwoWay, Converter={StaticResource PlayerAspcetDataConverter1}}"
+                                        SelectedValue="{Binding Path=SaveGame.Character.HeroPointsSaveData.PlayerAspectDataPath, Mode=TwoWay, Converter={StaticResource PlayerAspcetDataConverter1}}"
                                         SelectionChanged="CharacterClass_SelectionChanged" />
                                 </Grid>
 
@@ -671,10 +671,10 @@
                                         Margin="140,0,0,0"
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Top"
-                                        IsEnabled="{Binding bSaveLoaded}"
+                                        IsEnabled="{Binding SaveLoaded}"
                                         Minimum="0"
                                         ToolTip="Amount of Strength of your character."
-                                        Value="{Binding saveGame.Character.HeroPointsSaveData.Strength, Mode=TwoWay}" />
+                                        Value="{Binding SaveGame.Character.HeroPointsSaveData.Strength, Mode=TwoWay}" />
                                 </Grid>
 
                                 <Grid Margin="0,84,0,0" VerticalAlignment="Top">
@@ -693,10 +693,10 @@
                                         Margin="140,0,0,0"
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Top"
-                                        IsEnabled="{Binding bSaveLoaded}"
+                                        IsEnabled="{Binding SaveLoaded}"
                                         Minimum="0"
                                         ToolTip="Amount of Dexterity of your character."
-                                        Value="{Binding saveGame.Character.HeroPointsSaveData.Dexterity, Mode=TwoWay}" />
+                                        Value="{Binding SaveGame.Character.HeroPointsSaveData.Dexterity, Mode=TwoWay}" />
                                 </Grid>
 
                                 <Grid Margin="0,116,0,0" VerticalAlignment="Top">
@@ -715,10 +715,10 @@
                                         Margin="140,0,0,0"
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Top"
-                                        IsEnabled="{Binding bSaveLoaded}"
+                                        IsEnabled="{Binding SaveLoaded}"
                                         Minimum="0"
                                         ToolTip="Amount of Intelligence of your character."
-                                        Value="{Binding saveGame.Character.HeroPointsSaveData.Intelligence, Mode=TwoWay}" />
+                                        Value="{Binding SaveGame.Character.HeroPointsSaveData.Intelligence, Mode=TwoWay}" />
                                 </Grid>
 
                                 <Grid Margin="0,148,0,0" VerticalAlignment="Top">
@@ -737,10 +737,10 @@
                                         Margin="140,0,0,0"
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Top"
-                                        IsEnabled="{Binding bSaveLoaded}"
+                                        IsEnabled="{Binding SaveLoaded}"
                                         Minimum="0"
                                         ToolTip="Amount of Widsom of your character."
-                                        Value="{Binding saveGame.Character.HeroPointsSaveData.Wisdom, Mode=TwoWay}" />
+                                        Value="{Binding SaveGame.Character.HeroPointsSaveData.Wisdom, Mode=TwoWay}" />
                                 </Grid>
 
                                 <Grid Margin="0,180,0,0" VerticalAlignment="Top">
@@ -759,10 +759,10 @@
                                         Margin="140,0,0,0"
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Top"
-                                        IsEnabled="{Binding bSaveLoaded}"
+                                        IsEnabled="{Binding SaveLoaded}"
                                         Minimum="0"
                                         ToolTip="Amount of Consitution of your character."
-                                        Value="{Binding saveGame.Character.HeroPointsSaveData.Constitution, Mode=TwoWay}" />
+                                        Value="{Binding SaveGame.Character.HeroPointsSaveData.Constitution, Mode=TwoWay}" />
                                 </Grid>
 
                                 <Grid Margin="0,212,0,0" VerticalAlignment="Top">
@@ -781,10 +781,10 @@
                                         Margin="140,0,0,0"
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Top"
-                                        IsEnabled="{Binding bSaveLoaded}"
+                                        IsEnabled="{Binding SaveLoaded}"
                                         Minimum="0"
                                         ToolTip="Amount of Attunement of your character."
-                                        Value="{Binding saveGame.Character.HeroPointsSaveData.Luck, Mode=TwoWay}" />
+                                        Value="{Binding SaveGame.Character.HeroPointsSaveData.Luck, Mode=TwoWay}" />
                                 </Grid>
                             </Grid>
                         </GroupBox>
@@ -834,10 +834,10 @@
                                     VerticalAlignment="Top"
                                     Background="{DynamicResource {x:Static adonisUi:Brushes.Layer4BackgroundBrush}}"
                                     Foreground="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}"
-                                    IsEnabled="{Binding bSaveLoaded}"
-                                    ItemsSource="{Binding Path=saveGame.Character, Converter={StaticResource PlaythroughToStringConverter1}, ConverterParameter=list}"
+                                    IsEnabled="{Binding SaveLoaded}"
+                                    ItemsSource="{Binding Path=SaveGame.Character, Converter={StaticResource PlaythroughToStringConverter1}, ConverterParameter=list}"
                                     RenderTransformOrigin="-1.376,0.25"
-                                    SelectedValue="{Binding Path=saveGame.Character, Converter={StaticResource PlaythroughToStringConverter1}, ConverterParameter=value, Mode=OneWay}" />
+                                    SelectedValue="{Binding Path=SaveGame.Character, Converter={StaticResource PlaythroughToStringConverter1}, ConverterParameter=value, Mode=OneWay}" />
                             </Grid>
                         </GroupBox.Header>
 
@@ -845,8 +845,8 @@
                             <ItemsControl Name="TeleportersItmCntrl">
                                 <ItemsControl.ItemsSource>
                                     <MultiBinding Converter="{StaticResource TravelStationConverter1}">
-                                        <Binding Mode="TwoWay" Path="saveGame.Character" />
-                                        <Binding Mode="TwoWay" Path="showDebugMaps" />
+                                        <Binding Mode="TwoWay" Path="SaveGame.Character" />
+                                        <Binding Mode="TwoWay" Path="ShowDebugMaps" />
                                         <Binding
                                             ElementName="SelectedPlaythroughBox"
                                             Mode="OneWay"
@@ -881,8 +881,8 @@
                         VerticalAlignment="Top"
                         Checked="DbgMapBox_StateChange"
                         Content="Show Debug Travels"
-                        IsChecked="{Binding Path=showDebugMaps, Mode=TwoWay}"
-                        IsEnabled="{Binding bSaveLoaded}"
+                        IsChecked="{Binding Path=ShowDebugMaps, Mode=TwoWay}"
+                        IsEnabled="{Binding SaveLoaded}"
                         Unchecked="DbgMapBox_StateChange" />
 
                     <Button
@@ -893,7 +893,7 @@
                         VerticalAlignment="Top"
                         Click="EnableAllTeleportersBtn_Click"
                         Content="Enable All Visible"
-                        IsEnabled="{Binding bSaveLoaded}" />
+                        IsEnabled="{Binding SaveLoaded}" />
 
                     <Button
                         Name="DisableAllTeleportersBtn"
@@ -903,7 +903,7 @@
                         VerticalAlignment="Top"
                         Click="DisableAllTeleportersBtn_Click"
                         Content="Disable All Visible"
-                        IsEnabled="{Binding bSaveLoaded}" />
+                        IsEnabled="{Binding SaveLoaded}" />
                 </Grid>
             </TabItem>
 
@@ -990,7 +990,7 @@
                         <Button
                             Name="SyncEquippedBtn"
                             Click="SyncEquippedBtn_Click"
-                            IsEnabled="{Binding saveGame, TargetNullValue=False}">
+                            IsEnabled="{Binding SaveGame, TargetNullValue=False}">
                             <StackPanel Orientation="Horizontal">
                                 <Image
                                     Width="27"
@@ -1180,7 +1180,7 @@
                                     Margin="115,8,10,0"
                                     HorizontalAlignment="Stretch"
                                     VerticalAlignment="Top"
-                                    Maximum="{Binding Path=maximumXP}"
+                                    Maximum="{Binding Path=MaximumXP}"
                                     Minimum="0"
                                     Value="{Binding Path=SelectedSerial.Level}" />
 
@@ -1545,8 +1545,8 @@
                         Style="{StaticResource PropertyGridStyle}">
                         <xctk:PropertyGrid.SelectedObject>
                             <MultiBinding Converter="{StaticResource MultiElementObjectBinder1}">
-                                <Binding Path="saveGame.Character" />
-                                <Binding Path="profile.Profile" />
+                                <Binding Path="SaveGame.Character" />
+                                <Binding Path="Profile.Profile" />
                             </MultiBinding>
                         </xctk:PropertyGrid.SelectedObject>
 
@@ -1563,7 +1563,7 @@
                 </Grid>
             </TabItem>
 
-            <TabItem HorizontalAlignment="Left" IsEnabled="{Binding profile, TargetNullValue=False}">
+            <TabItem HorizontalAlignment="Left" IsEnabled="{Binding Profile, TargetNullValue=False}">
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
                         <Image
@@ -1624,7 +1624,7 @@
                                                     VerticalAlignment="Top"
                                                     Minimum="0"
                                                     ToolTip="Amount of Intelligence of your Myth Rank."
-                                                    Value="{Binding profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[0], Mode=TwoWay}" />
+                                                    Value="{Binding Profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[0], Mode=TwoWay}" />
                                             </Grid>
 
                                             <Grid Margin="0,32,0,0" VerticalAlignment="Top">
@@ -1645,7 +1645,7 @@
                                                     VerticalAlignment="Top"
                                                     Minimum="0"
                                                     ToolTip="Amount of Spell Critical Damage of your Myth Rank."
-                                                    Value="{Binding profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[1], Mode=TwoWay}" />
+                                                    Value="{Binding Profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[1], Mode=TwoWay}" />
                                             </Grid>
 
                                             <Grid Margin="0,64,0,0" VerticalAlignment="Top">
@@ -1666,7 +1666,7 @@
                                                     VerticalAlignment="Top"
                                                     Minimum="0"
                                                     ToolTip="Amount of Intelligence of your Myth Rank."
-                                                    Value="{Binding profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[2], Mode=TwoWay}" />
+                                                    Value="{Binding Profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[2], Mode=TwoWay}" />
                                             </Grid>
 
                                             <Grid Margin="0,96,0,0" VerticalAlignment="Top">
@@ -1687,7 +1687,7 @@
                                                     VerticalAlignment="Top"
                                                     Minimum="0"
                                                     ToolTip="Amount of Fire Damage of your Myth Rank."
-                                                    Value="{Binding profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[3], Mode=TwoWay}" />
+                                                    Value="{Binding Profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[3], Mode=TwoWay}" />
                                             </Grid>
 
                                             <Grid Margin="0,128,0,0" VerticalAlignment="Top">
@@ -1708,7 +1708,7 @@
                                                     VerticalAlignment="Top"
                                                     Minimum="0"
                                                     ToolTip="Amount of Frost Damage of your Myth Rank."
-                                                    Value="{Binding profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[4], Mode=TwoWay}" />
+                                                    Value="{Binding Profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[4], Mode=TwoWay}" />
                                             </Grid>
 
                                             <Grid Margin="0,160,0,0" VerticalAlignment="Top">
@@ -1729,7 +1729,7 @@
                                                     VerticalAlignment="Top"
                                                     Minimum="0"
                                                     ToolTip="Amount of Status Effect Chance of your Myth Rank."
-                                                    Value="{Binding profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[5], Mode=TwoWay}" />
+                                                    Value="{Binding Profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[5], Mode=TwoWay}" />
                                             </Grid>
 
                                             <Grid Margin="0,192,0,0" VerticalAlignment="Top">
@@ -1750,7 +1750,7 @@
                                                     VerticalAlignment="Top"
                                                     Minimum="0"
                                                     ToolTip="Amount of Spell Damage of your Myth Rank."
-                                                    Value="{Binding profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[6], Mode=TwoWay}" />
+                                                    Value="{Binding Profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[6], Mode=TwoWay}" />
                                             </Grid>
 
                                             <Grid Margin="0,224,0,0" VerticalAlignment="Top">
@@ -1771,7 +1771,7 @@
                                                     VerticalAlignment="Top"
                                                     Minimum="0"
                                                     ToolTip="Amount of Strength of your Myth Rank."
-                                                    Value="{Binding profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[7], Mode=TwoWay}" />
+                                                    Value="{Binding Profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[7], Mode=TwoWay}" />
                                             </Grid>
 
                                             <Grid Margin="0,256,0,0" VerticalAlignment="Top">
@@ -1792,7 +1792,7 @@
                                                     VerticalAlignment="Top"
                                                     Minimum="0"
                                                     ToolTip="Amount of Constitution of your Myth Rank."
-                                                    Value="{Binding profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[8], Mode=TwoWay}" />
+                                                    Value="{Binding Profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[8], Mode=TwoWay}" />
                                             </Grid>
 
                                             <Grid Margin="0,288,0,0" VerticalAlignment="Top">
@@ -1813,7 +1813,7 @@
                                                     VerticalAlignment="Top"
                                                     Minimum="0"
                                                     ToolTip="Amount of Dark Magic Damage of your Myth Rank."
-                                                    Value="{Binding profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[9], Mode=TwoWay}" />
+                                                    Value="{Binding Profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[9], Mode=TwoWay}" />
                                             </Grid>
 
                                             <Grid Margin="0,320,0,0" VerticalAlignment="Top">
@@ -1834,7 +1834,7 @@
                                                     VerticalAlignment="Top"
                                                     Minimum="0"
                                                     ToolTip="Amount of Melee Critical Chance of your Myth Rank."
-                                                    Value="{Binding profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[10], Mode=TwoWay}" />
+                                                    Value="{Binding Profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[10], Mode=TwoWay}" />
                                             </Grid>
 
                                             <Grid Margin="0,352,0,0" VerticalAlignment="Top">
@@ -1855,7 +1855,7 @@
                                                     VerticalAlignment="Top"
                                                     Minimum="0"
                                                     ToolTip="Amount of Melee Swing Damage of your Myth Rank."
-                                                    Value="{Binding profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[11], Mode=TwoWay}" />
+                                                    Value="{Binding Profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[11], Mode=TwoWay}" />
                                             </Grid>
 
                                             <Grid Margin="0,384,0,0" VerticalAlignment="Top">
@@ -1876,7 +1876,7 @@
                                                     VerticalAlignment="Top"
                                                     Minimum="0"
                                                     ToolTip="Amount of Melee Critical Damage of your Myth Rank."
-                                                    Value="{Binding profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[12], Mode=TwoWay}" />
+                                                    Value="{Binding Profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[12], Mode=TwoWay}" />
                                             </Grid>
 
                                             <Grid Margin="0,416,0,0" VerticalAlignment="Top">
@@ -1897,7 +1897,7 @@
                                                     VerticalAlignment="Top"
                                                     Minimum="0"
                                                     ToolTip="Amount of Melee Damage of your Myth Rank."
-                                                    Value="{Binding profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[13], Mode=TwoWay}" />
+                                                    Value="{Binding Profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[13], Mode=TwoWay}" />
                                             </Grid>
 
                                             <Grid Margin="0,448,0,0" VerticalAlignment="Top">
@@ -1918,7 +1918,7 @@
                                                     VerticalAlignment="Top"
                                                     Minimum="0"
                                                     ToolTip="Amount of Dexterity of your Myth Rank."
-                                                    Value="{Binding profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[14], Mode=TwoWay}" />
+                                                    Value="{Binding Profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[14], Mode=TwoWay}" />
                                             </Grid>
 
                                             <Grid Margin="0,480,0,0" VerticalAlignment="Top">
@@ -1939,7 +1939,7 @@
                                                     VerticalAlignment="Top"
                                                     Minimum="0"
                                                     ToolTip="Amount of Gun Handling of your Myth Rank."
-                                                    Value="{Binding profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[15], Mode=TwoWay}" />
+                                                    Value="{Binding Profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[15], Mode=TwoWay}" />
                                             </Grid>
 
                                             <Grid Margin="0,512,0,0" VerticalAlignment="Top">
@@ -1960,7 +1960,7 @@
                                                     VerticalAlignment="Top"
                                                     Minimum="0"
                                                     ToolTip="Amount of Move Speed of your Myth Rank."
-                                                    Value="{Binding profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[16], Mode=TwoWay}" />
+                                                    Value="{Binding Profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[16], Mode=TwoWay}" />
                                             </Grid>
 
                                             <Grid Margin="0,544,0,0" VerticalAlignment="Top">
@@ -1981,7 +1981,7 @@
                                                     VerticalAlignment="Top"
                                                     Minimum="0"
                                                     ToolTip="Amount of Reload Speed of your Myth Rank."
-                                                    Value="{Binding profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[17], Mode=TwoWay}" />
+                                                    Value="{Binding Profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[17], Mode=TwoWay}" />
                                             </Grid>
 
                                             <Grid Margin="0,576,0,0" VerticalAlignment="Top">
@@ -2002,7 +2002,7 @@
                                                     VerticalAlignment="Top"
                                                     Minimum="0"
                                                     ToolTip="Amount of Magazine Size of your Myth Rank."
-                                                    Value="{Binding profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[18], Mode=TwoWay}" />
+                                                    Value="{Binding Profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[18], Mode=TwoWay}" />
                                             </Grid>
 
                                             <Grid Margin="0,608,0,0" VerticalAlignment="Top">
@@ -2023,7 +2023,7 @@
                                                     VerticalAlignment="Top"
                                                     Minimum="0"
                                                     ToolTip="Amount of Fire Rate of your Myth Rank."
-                                                    Value="{Binding profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[19], Mode=TwoWay}" />
+                                                    Value="{Binding Profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[19], Mode=TwoWay}" />
                                             </Grid>
 
                                             <Grid Margin="0,640,0,0" VerticalAlignment="Top">
@@ -2044,7 +2044,7 @@
                                                     VerticalAlignment="Top"
                                                     Minimum="0"
                                                     ToolTip="Amount of Gun Damage of your Myth Rank."
-                                                    Value="{Binding profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[20], Mode=TwoWay}" />
+                                                    Value="{Binding Profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[20], Mode=TwoWay}" />
                                             </Grid>
 
                                             <Grid Margin="0,672,0,0" VerticalAlignment="Top">
@@ -2065,7 +2065,7 @@
                                                     VerticalAlignment="Top"
                                                     Minimum="0"
                                                     ToolTip="Amount of Wisdom of your Myth Rank."
-                                                    Value="{Binding profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[21], Mode=TwoWay}" />
+                                                    Value="{Binding Profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[21], Mode=TwoWay}" />
                                             </Grid>
 
                                             <Grid Margin="0,704,0,0" VerticalAlignment="Top">
@@ -2086,7 +2086,7 @@
                                                     VerticalAlignment="Top"
                                                     Minimum="0"
                                                     ToolTip="Amount of Companion Damage of your Myth Rank."
-                                                    Value="{Binding profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[22], Mode=TwoWay}" />
+                                                    Value="{Binding Profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[22], Mode=TwoWay}" />
                                             </Grid>
 
                                             <Grid Margin="0,736,0,0" VerticalAlignment="Top">
@@ -2107,7 +2107,7 @@
                                                     VerticalAlignment="Top"
                                                     Minimum="0"
                                                     ToolTip="Amount of Attunement of your Myth Rank."
-                                                    Value="{Binding profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[23], Mode=TwoWay}" />
+                                                    Value="{Binding Profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[23], Mode=TwoWay}" />
                                             </Grid>
 
                                             <Grid Margin="0,768,0,0" VerticalAlignment="Top">
@@ -2128,7 +2128,7 @@
                                                     VerticalAlignment="Top"
                                                     Minimum="0"
                                                     ToolTip="Amount of Ligthning Damage of your Myth Rank."
-                                                    Value="{Binding profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[24], Mode=TwoWay}" />
+                                                    Value="{Binding Profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[24], Mode=TwoWay}" />
                                             </Grid>
 
                                             <Grid Margin="0,800,0,0" VerticalAlignment="Top">
@@ -2149,7 +2149,7 @@
                                                     VerticalAlignment="Top"
                                                     Minimum="0"
                                                     ToolTip="Amount of Loot Luck of your Myth Rank."
-                                                    Value="{Binding profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[25], Mode=TwoWay}" />
+                                                    Value="{Binding Profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[25], Mode=TwoWay}" />
                                             </Grid>
 
                                             <Grid Margin="0,832,0,0" VerticalAlignment="Top">
@@ -2170,7 +2170,7 @@
                                                     VerticalAlignment="Top"
                                                     Minimum="0"
                                                     ToolTip="Amount of Poison Damage of your Myth Rank."
-                                                    Value="{Binding profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[26], Mode=TwoWay}" />
+                                                    Value="{Binding Profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[26], Mode=TwoWay}" />
                                             </Grid>
 
                                             <Grid Margin="0,864,0,0" VerticalAlignment="Top">
@@ -2191,7 +2191,7 @@
                                                     VerticalAlignment="Top"
                                                     Minimum="0"
                                                     ToolTip="Amount of Ability Damage of your Myth Rank."
-                                                    Value="{Binding profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[27], Mode=TwoWay}" />
+                                                    Value="{Binding Profile.Profile.PlayerPrestige.PointsSpentByIndexOrders[27], Mode=TwoWay}" />
                                             </Grid>
                                         </Grid>
                                     </ScrollViewer>
@@ -2231,7 +2231,7 @@
                                             VerticalAlignment="Top"
                                             Minimum="0"
                                             ToolTip="Amount of Skull Golden Keys"
-                                            Value="{Binding profile.Profile, Mode=TwoWay, Converter={StaticResource KeyToIntegerConverter1}, ConverterParameter=GoldenKeys}" />
+                                            Value="{Binding Profile.Profile, Mode=TwoWay, Converter={StaticResource KeyToIntegerConverter1}, ConverterParameter=GoldenKeys}" />
                                     </Grid>
                                 </Grid>
                             </GroupBox>
@@ -2262,7 +2262,7 @@
                                             Maximum="{Binding MaximumBankSDUs}"
                                             Minimum="0"
                                             ToolTip="Amount of Bank SDUs on your character"
-                                            Value="{Binding profile.Profile, Mode=TwoWay, Converter={StaticResource SDUConverter1}, ConverterParameter=Bank}" />
+                                            Value="{Binding Profile.Profile, Mode=TwoWay, Converter={StaticResource SDUConverter1}, ConverterParameter=Bank}" />
                                     </Grid>
 
                                     <Grid Margin="0,52,0,0" VerticalAlignment="Top">
@@ -2283,7 +2283,7 @@
                                             Maximum="{Binding MaximumBankSDUs}"
                                             Minimum="0"
                                             ToolTip="Amount of Bank SDUs on your character"
-                                            Value="{Binding profile.Profile, Mode=TwoWay, Converter={StaticResource SDUConverter1}, ConverterParameter=LostLoot}" />
+                                            Value="{Binding Profile.Profile, Mode=TwoWay, Converter={StaticResource SDUConverter1}, ConverterParameter=LostLoot}" />
                                     </Grid>
                                 </Grid>
                             </GroupBox>
@@ -2433,11 +2433,11 @@
                                 FontWeight="Normal" />
 
                             <Button
+                                Name="btnUpdate"
                                 Width="120"
                                 Margin="0,0,0,8"
                                 Click="UpdateButton_Click"
-                                Content="Check For Updates"
-                                IsEnabled="False" />
+                                Content="Check For Updates" />
 
                             <CheckBox
                                 Name="DarkModeBox"
