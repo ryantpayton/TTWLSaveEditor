@@ -399,7 +399,7 @@ namespace WonderlandsSaveEditor
 
             ((TabControl)FindName("TabCntrl")).SelectedIndex = ((TabControl)FindName("TabCntrl")).Items.Count - 1;
 
-            tbUpdates.Inlines.Add(new Run() { Text = $"Current Version: v{Version}", FontWeight = FontWeights.Bold });
+            tbUpdates.Inlines.Add(new Run() { Text = $"Current Version: V{Version}", FontWeight = FontWeights.Bold });
             tbUpdates.Inlines.Add(new LineBreak());
             tbUpdates.Inlines.Add(new LineBreak());
 
@@ -432,8 +432,6 @@ namespace WonderlandsSaveEditor
             }
             catch (Exception ex)
             {
-                tbUpdates.Inlines.Add(new Run() { Text = $"v{Version}", FontWeight = FontWeights.Bold });
-                tbUpdates.Inlines.Add(new LineBreak());
                 tbUpdates.Inlines.Add(new Run() { Text = "Could not fetch changelog." });
 
 #if DEBUG
