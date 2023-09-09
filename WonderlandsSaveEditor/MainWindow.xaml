@@ -22,15 +22,18 @@
     <Window.Style>
         <Style BasedOn="{StaticResource {x:Type Window}}" TargetType="Window" />
     </Window.Style>
+
     <Window.Resources>
         <LinearGradientBrush x:Key="fdh" StartPoint="0,0.5" EndPoint="1,0.5">
             <GradientStop Offset="0" Color="Red" />
             <GradientStop Offset="1.15" Color="Gold" />
         </LinearGradientBrush>
+
         <LinearGradientBrush x:Key="awt" StartPoint="0,0.5" EndPoint="1,0.5">
             <GradientStop Offset="0" Color="Purple" />
             <GradientStop Offset="1.15" Color="MediumOrchid" />
         </LinearGradientBrush>
+
         <helpers:IntegerSecondsToTimeSpanConverter x:Key="IntegerToSpanConverter1" />
         <helpers:EXPointToLevelConverter x:Key="EXPToLevelConverter1" />
         <helpers:LevelToEXPointConverter x:Key="LevelToEXPConverter1" />
@@ -43,16 +46,13 @@
         <helpers:CurrencyToIntegerConverter x:Key="EridiumToIntegerConverter" />
         <helpers:TravelStationConverter x:Key="TravelStationConverter1" />
         <helpers:PlaythroughToStringConverter x:Key="PlaythroughToStringConverter1" />
-
         <helpers:MythPointsToDataGridConverter x:Key="MythPointsToDataGridConverter1" />
         <helpers:ProfileSDUToIntegerConverter x:Key="SDUConverter1" />
         <helpers:KeyToIntegerConverter x:Key="KeyToIntegerConverter1" />
-
         <helpers:MultiElementObjectBinder x:Key="MultiElementObjectBinder1" />
         <helpers:IntegerToMayhemLevelConverter x:Key="IntegerToMayhemLevelConverter1" />
         <helpers:ChallengeToBooleanConverter x:Key="ChallengeToBooleanConverter1" />
         <helpers:ItemSlotConverter x:Key="ItemSlotConverter1" />
-
         <helpers:AndConverter x:Key="AndConverter1" />
         <helpers:IntegerLimiterConverter x:Key="IntegerLimiterConverter1" />
 
@@ -68,29 +68,17 @@
 
     <adonisControls:AdonisWindow.TitleBarContent>
         <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-            <Button
-                Name="DbgBtn"
-                Click="DbgBtn_Click"
-                DockPanel.Dock="Right">
+            <Button Name="DbgBtn" Click="DbgBtn_Click" DockPanel.Dock="Right">
                 <StackPanel Orientation="Horizontal">
-                    <Image
-                        Width="16"
-                        Height="16"
-                        Margin="0,0,5,0"
-                        RenderOptions.BitmapScalingMode="Fant"
-                        Source="Icons\fugue\wrench-screwdriver.png" />
-                    <Label
-                        Content="Debug"
-                        FontFamily="Segoe UI"
-                        FontSize="14"
-                        FontWeight="Medium" />
+                    <Image Width="16" Height="16" Margin="0,0,5,0" RenderOptions.BitmapScalingMode="Fant" Source="Icons\fugue\wrench-screwdriver.png" />
+                    <Label Content="Debug" FontFamily="Segoe UI" FontSize="14" FontWeight="Medium" />
                 </StackPanel>
             </Button>
         </StackPanel>
     </adonisControls:AdonisWindow.TitleBarContent>
 
     <Grid>
-        <ToolBar
+        <DockPanel
             x:Uid="ToolWindowToolbar"
             Height="30"
             HorizontalAlignment="Left"
@@ -98,92 +86,66 @@
             AllowDrop="False"
             Background="{DynamicResource {x:Static adonisUi:Brushes.Layer0BackgroundBrush}}"
             Focusable="False">
-            <!--  I'm hiding this button for now because I find it to be a pain to work on  -->
-            <Button
-                Name="NewSaveBtn"
-                Click="NewSaveBtn_Click"
-                Visibility="Collapsed">
+            <Button Name="NewSaveBtn" Click="NewSaveBtn_Click" Visibility="Collapsed">
                 <StackPanel Orientation="Horizontal">
-                    <Image
-                        Width="16"
-                        Height="16"
-                        Margin="0,0,5,0"
-                        RenderOptions.BitmapScalingMode="Fant"
-                        Source="Icons\fugue\document-binary.png" />
+                    <Image Width="16" Height="16" Margin="0,0,5,0" RenderOptions.BitmapScalingMode="Fant" Source="Icons\fugue\document-binary.png" />
                     <Label Content="New" FontWeight="Medium" />
                 </StackPanel>
             </Button>
 
-            <Button Name="OpenSaveBtn" Click="OpenSaveBtn_Click">
+            <Button Name="OpenSaveBtn" Click="OpenSaveBtn_Click" BorderThickness="0" Background="Transparent">
                 <StackPanel Orientation="Horizontal">
-                    <Image
-                        Width="16"
-                        Height="16"
-                        Margin="0,0,5,0"
-                        RenderOptions.BitmapScalingMode="Fant"
-                        Source="Icons\fugue\folder-open-document.png" />
-
+                    <Image Width="16" Height="16" Margin="0,0,5,0" RenderOptions.BitmapScalingMode="Fant" Source="Icons\fugue\folder-open-document.png" />
                     <Label Content="Open" FontWeight="Medium" />
                 </StackPanel>
             </Button>
 
-            <Button
-                Name="SaveBtn"
-                Click="SaveBtn_Click"
-                IsEnabled="False">
+            <Button Name="SaveBtn" Click="SaveBtn_Click" IsEnabled="False" BorderThickness="0" Background="Transparent">
                 <StackPanel Orientation="Horizontal">
-                    <Image
-                        Width="16"
-                        Height="16"
-                        Margin="0,0,5,0"
-                        RenderOptions.BitmapScalingMode="Fant"
-                        Source="Icons\fugue\disk-black.png" />
-
+                    <Image Width="16" Height="16" Margin="0,0,5,0" RenderOptions.BitmapScalingMode="Fant" Source="Icons\fugue\disk-black.png" />
                     <Label Content="Save" FontWeight="Medium" />
                 </StackPanel>
             </Button>
 
-            <Button
-                Name="SaveAsBtn"
-                Click="SaveAsBtn_Click"
-                IsEnabled="False">
+            <Button Name="SaveAsBtn" Click="SaveAsBtn_Click" IsEnabled="False" BorderThickness="0" Background="Transparent">
                 <StackPanel Orientation="Horizontal">
-                    <Image
-                        Width="16"
-                        Height="16"
-                        Margin="0,0,5,0"
-                        RenderOptions.BitmapScalingMode="Fant"
-                        Source="Icons\fugue\disk--plus.png" />
+                    <Image Width="16" Height="16" Margin="0,0,5,0" RenderOptions.BitmapScalingMode="Fant" Source="Icons\fugue\disk--plus.png" />
                     <Label Content="Save As" FontWeight="Medium" />
                 </StackPanel>
             </Button>
 
             <Separator BorderThickness="1" />
-        </ToolBar>
+        </DockPanel>
 
-        <TabControl
-            Name="TabCntrl"
-            Margin="0,30,0,0"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch">
+        <TabControl Name="TabCntrl" Margin="0,30,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <TabItem IsEnabled="{Binding SaveGame, TargetNullValue=False}">
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
-                        <Image
-                            Width="27"
-                            Height="26"
-                            Margin="0,0,5,0"
-                            RenderOptions.BitmapScalingMode="Fant"
-                            Source="Icons\game\ECHOComm_IE.png" />
-                        <Label
-                            HorizontalContentAlignment="Center"
-                            VerticalContentAlignment="Center"
-                            Content="General"
-                            FontWeight="Medium" />
+                        <Image Width="27" Height="26" Margin="0,0,5,0" RenderOptions.BitmapScalingMode="Fant" Source="Icons\game\ECHOComm_IE.png" />
+                        <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="General" FontWeight="Medium" />
                     </StackPanel>
                 </TabItem.Header>
 
                 <Grid>
+                    <Label
+                        Width="101"
+                        Height="25"
+                        Margin="10,10,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        VerticalContentAlignment="Center"
+                        Content="Platform:"
+                        FontWeight="Normal" />
+
+                    <ComboBox
+                        Name="cbPlatform"
+                        Height="25"
+                        Margin="116,10,328,0"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Top"
+                        ItemsSource="{Binding Source={StaticResource PlatformDataSource}}"
+                        SelectedValue="{Binding Path=SaveGame.Platform}" />
+
                     <Label
                         Width="101"
                         Height="24"
@@ -193,6 +155,7 @@
                         VerticalContentAlignment="Center"
                         Content="Save GUID:"
                         FontWeight="Normal" />
+
                     <TextBox
                         Name="GUIDTextBox"
                         Height="25"
@@ -203,6 +166,7 @@
                         Text="{Binding Path=SaveGame.Character.SaveGameGuid, Mode=TwoWay}"
                         TextWrapping="Wrap"
                         ToolTip="A randomly generated ID of your save; do not touch unless you know what you're doing" />
+
                     <Button
                         Name="RandomizeGUIDBtn"
                         Width="85"
@@ -223,6 +187,7 @@
                         VerticalContentAlignment="Center"
                         Content="Save Game Slot:"
                         FontWeight="Normal" />
+
                     <xctk:IntegerUpDown
                         Margin="116,70,328,0"
                         HorizontalAlignment="Stretch"
@@ -239,6 +204,7 @@
                         VerticalContentAlignment="Center"
                         Content="Total Time Played: "
                         FontWeight="Normal" />
+
                     <xctk:TimeSpanUpDown
                         Margin="116,95,328,0"
                         HorizontalAlignment="Stretch"
@@ -246,41 +212,14 @@
                         IsEnabled="{Binding Path=SaveLoaded}"
                         ToolTip="Format: Days.Hours:Minutes:Seconds"
                         Value="{Binding Path=SaveGame.Character.TimePlayedSeconds, Mode=TwoWay, Converter={StaticResource IntegerToSpanConverter1}}" />
-                    <Label
-                        Width="101"
-                        Height="25"
-                        Margin="10,10,0,0"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Top"
-                        VerticalContentAlignment="Center"
-                        Content="Platform:"
-                        FontWeight="Normal" />
-
-                    <ComboBox
-                        Name="cbPlatform"
-                        Height="25"
-                        Margin="116,10,328,0"
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Top"
-                        ItemsSource="{Binding Source={StaticResource PlatformDataSource}}"
-                        SelectedValue="{Binding Path=SaveGame.Platform}" />
                 </Grid>
             </TabItem>
 
             <TabItem IsEnabled="{Binding SaveGame, TargetNullValue=False}">
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
-                        <Image
-                            Width="27"
-                            Height="26"
-                            Margin="0,0,5,0"
-                            RenderOptions.BitmapScalingMode="Fant"
-                            Source="Icons\game\MinimapIcon_QuickChange.png" />
-                        <Label
-                            HorizontalContentAlignment="Center"
-                            VerticalContentAlignment="Center"
-                            Content="Character"
-                            FontWeight="Medium" />
+                        <Image Width="27" Height="26" Margin="0,0,5,0" RenderOptions.BitmapScalingMode="Fant" Source="Icons\game\MinimapIcon_QuickChange.png" />
+                        <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Character" FontWeight="Medium" />
                     </StackPanel>
                 </TabItem.Header>
 
@@ -299,11 +238,7 @@
 
                         <GroupBox VerticalAlignment="Top" Height="124" Grid.RowSpan="2">
                             <Grid Height="113">
-                                <Label
-                                    Height="18"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Top"
-                                    Content="Customization" />
+                                <Label Height="18" HorizontalAlignment="Stretch" VerticalAlignment="Top" Content="Customization" />
 
                                 <Grid Margin="0,20,0,0" VerticalAlignment="Top">
                                     <Label
@@ -346,6 +281,7 @@
                                         SelectedValue="{Binding SaveGame.Character.PlayerPronounSelection, Mode=TwoWay, Converter={StaticResource PlayerPronounDataConverter1}}"
                                         ToolTip="The pronoun of your character" />
                                 </Grid>
+
                                 <Label
                                     Width="140"
                                     Height="24"
@@ -356,6 +292,7 @@
                                     VerticalContentAlignment="Center"
                                     Content="Companion Name"
                                     FontWeight="Normal" />
+
                                 <TextBox
                                     Margin="140,83,0,0"
                                     HorizontalAlignment="Stretch"
@@ -368,11 +305,7 @@
 
                         <GroupBox Grid.Row="1" VerticalAlignment="Top" Height="222" Grid.RowSpan="2" Margin="0,39,0,0">
                             <Grid>
-                                <Label
-                                    Height="18"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Top"
-                                    Content="Inventory Slots" />
+                                <Label Height="18" HorizontalAlignment="Stretch" VerticalAlignment="Top" Content="Inventory Slots" />
 
                                 <Grid Margin="0,20,0,0" VerticalAlignment="Top">
                                     <CheckBox
@@ -455,11 +388,7 @@
 
                         <GroupBox Grid.Row="2" VerticalAlignment="Top" Height="102" Margin="0,43,0,0">
                             <Grid>
-                                <Label
-                                    Height="18"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Top"
-                                    Content="Chaos Level" />
+                                <Label Height="18" HorizontalAlignment="Stretch" VerticalAlignment="Top" Content="Chaos Level" />
 
                                 <Grid Margin="0,26,0,0" VerticalAlignment="Top">
                                     <Label
@@ -521,11 +450,7 @@
 
                         <GroupBox VerticalAlignment="Top">
                             <Grid>
-                                <Label
-                                    Height="18"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Top"
-                                    Content="Experience" />
+                                <Label Height="18" HorizontalAlignment="Stretch" VerticalAlignment="Top" Content="Experience" />
 
                                 <Grid Margin="0,20,0,0" VerticalAlignment="Top">
                                     <Label
@@ -575,11 +500,7 @@
 
                         <GroupBox Grid.Row="1" VerticalAlignment="Top">
                             <Grid>
-                                <Label
-                                    Height="18"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Top"
-                                    Content="Classes" />
+                                <Label Height="18" HorizontalAlignment="Stretch" VerticalAlignment="Top" Content="Classes" />
 
                                 <Grid Margin="0,20,0,0" VerticalAlignment="Top">
                                     <Label
@@ -628,11 +549,7 @@
 
                         <GroupBox Grid.Row="2" VerticalAlignment="Top">
                             <Grid>
-                                <Label
-                                    Height="18"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Top"
-                                    Content="Heroic Stats" />
+                                <Label Height="18" HorizontalAlignment="Stretch" VerticalAlignment="Top" Content="Heroic Stats" />
 
                                 <Grid Margin="0,20,0,0" VerticalAlignment="Top">
                                     <Label
@@ -795,35 +712,16 @@
             <TabItem IsEnabled="False">
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
-                        <Image
-                            Width="27"
-                            Height="26"
-                            Margin="0,0,5,0"
-                            RenderOptions.BitmapScalingMode="Fant"
-                            Source="Icons\game\MinimapIcon_GalaxyMap.png" />
-
-                        <Label
-                            HorizontalContentAlignment="Center"
-                            VerticalContentAlignment="Center"
-                            Content="Fast Travel"
-                            FontWeight="Medium" />
+                        <Image Width="27" Height="26" Margin="0,0,5,0" RenderOptions.BitmapScalingMode="Fant" Source="Icons\game\MinimapIcon_GalaxyMap.png" />
+                        <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Fast Travel" FontWeight="Medium" />
                     </StackPanel>
                 </TabItem.Header>
 
                 <Grid>
-                    <GroupBox
-                        Name="VisitedTeleportersGrpBox"
-                        Margin="0,0,198,0"
-                        HorizontalAlignment="Stretch">
+                    <GroupBox Name="VisitedTeleportersGrpBox" Margin="0,0,198,0" HorizontalAlignment="Stretch">
                         <GroupBox.Header>
-                            <Grid
-                                Height="25"
-                                Margin="0,0,0,0"
-                                HorizontalAlignment="Stretch">
-                                <Label
-                                    Margin="10,1,428,0"
-                                    VerticalContentAlignment="Center"
-                                    Content="Visited Teleporters" />
+                            <Grid Height="25" Margin="0,0,0,0" HorizontalAlignment="Stretch">
+                                <Label Margin="10,1,428,0" VerticalContentAlignment="Center" Content="Visited Teleporters" />
 
                                 <ComboBox
                                     Name="SelectedPlaythroughBox"
@@ -847,10 +745,7 @@
                                     <MultiBinding Converter="{StaticResource TravelStationConverter1}">
                                         <Binding Mode="TwoWay" Path="SaveGame.Character" />
                                         <Binding Mode="TwoWay" Path="ShowDebugMaps" />
-                                        <Binding
-                                            ElementName="SelectedPlaythroughBox"
-                                            Mode="OneWay"
-                                            Path="SelectedIndex" />
+                                        <Binding ElementName="SelectedPlaythroughBox" Mode="OneWay" Path="SelectedIndex" />
                                     </MultiBinding>
                                 </ItemsControl.ItemsSource>
 
@@ -861,10 +756,7 @@
                                             Checked="FastTravelChkBx_StateChanged"
                                             IsChecked="{Binding Path=booleanVar, Mode=TwoWay}"
                                             Unchecked="FastTravelChkBx_StateChanged">
-                                            <TextBlock
-                                                Margin="10,0,0,0"
-                                                FontSize="13"
-                                                Text="{Binding Path=Value}" />
+                                            <TextBlock Margin="10,0,0,0" FontSize="13" Text="{Binding Path=Value}" />
                                         </CheckBox>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
@@ -907,24 +799,11 @@
                 </Grid>
             </TabItem>
 
-            <TabItem
-                Name="InventoryTabItem"
-                HorizontalAlignment="Left"
-                IsEnabled="False">
+            <TabItem Name="InventoryTabItem" HorizontalAlignment="Left" IsEnabled="False">
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
-                        <Image
-                            Width="27"
-                            Height="26"
-                            Margin="0,0,5,0"
-                            RenderOptions.BitmapScalingMode="Fant"
-                            Source="Icons\game\BITMAP_ICO_Expansion_4k.png" />
-
-                        <Label
-                            HorizontalContentAlignment="Center"
-                            VerticalContentAlignment="Center"
-                            Content="Inventory"
-                            FontWeight="Medium" />
+                        <Image Width="27" Height="26" Margin="0,0,5,0" RenderOptions.BitmapScalingMode="Fant" Source="Icons\game\BITMAP_ICO_Expansion_4k.png" />
+                        <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Inventory" FontWeight="Medium" />
                     </StackPanel>
                 </TabItem.Header>
 
@@ -937,13 +816,10 @@
                     </Grid.CommandBindings>
 
                     <Grid.InputBindings>
-                        <KeyBinding
-                            Key="V"
-                            Command="Paste"
-                            Modifiers="Ctrl" />
+                        <KeyBinding Key="V" Command="Paste" Modifiers="Ctrl" />
                     </Grid.InputBindings>
 
-                    <ToolBar
+                    <DockPanel
                         x:Uid="BackpackToolBar"
                         Height="35"
                         HorizontalAlignment="Stretch"
@@ -951,79 +827,34 @@
                         AllowDrop="False"
                         Background="{DynamicResource {x:Static adonisUi:Brushes.Layer2BackgroundBrush}}"
                         Focusable="False">
-                        <Button Name="NewItemBtn" Click="NewItemBtn_Click">
+                        <Button Name="NewItemBtn" Click="NewItemBtn_Click" BorderThickness="0">
                             <StackPanel Orientation="Horizontal">
-                                <Image
-                                    Width="27"
-                                    Height="26"
-                                    Margin="0,0,5,0"
-                                    RenderOptions.BitmapScalingMode="Fant"
-                                    Source="Icons\game\MinimapIcon_Pinging_Loot.png" />
-
-                                <Label
-                                    HorizontalContentAlignment="Center"
-                                    VerticalContentAlignment="Center"
-                                    Content="New Item"
-                                    FontWeight="Medium" />
+                                <Image Width="27" Height="26" Margin="0,0,5,0" RenderOptions.BitmapScalingMode="Fant" Source="Icons\game\MinimapIcon_Pinging_Loot.png" />
+                                <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="New Item" FontWeight="Medium" />
                             </StackPanel>
                         </Button>
 
-                        <Button Name="PasteCodeBtn" Click="PasteCodeBtn_Click">
+                        <Button Name="PasteCodeBtn" Click="PasteCodeBtn_Click" BorderThickness="0,0,1,0" BorderBrush="AliceBlue">
                             <StackPanel Orientation="Horizontal">
-                                <Image
-                                    Width="27"
-                                    Height="26"
-                                    Margin="0,0,5,0"
-                                    RenderOptions.BitmapScalingMode="Fant"
-                                    Source="Icons\game\AllModIcons_I2E.png" />
-
-                                <Label
-                                    HorizontalContentAlignment="Center"
-                                    VerticalContentAlignment="Center"
-                                    Content="Paste Code"
-                                    FontWeight="Medium" />
+                                <Image Width="27" Height="26" Margin="0,0,5,0" RenderOptions.BitmapScalingMode="Fant" Source="Icons\game\AllModIcons_I2E.png" />
+                                <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Paste Code" FontWeight="Medium" />
                             </StackPanel>
                         </Button>
 
-                        <Separator />
-
-                        <Button
-                            Name="SyncEquippedBtn"
-                            Click="SyncEquippedBtn_Click"
-                            IsEnabled="{Binding SaveGame, TargetNullValue=False}">
+                        <Button Name="SyncEquippedBtn" Click="SyncEquippedBtn_Click" IsEnabled="{Binding SaveGame, TargetNullValue=False}" BorderThickness="0">
                             <StackPanel Orientation="Horizontal">
-                                <Image
-                                    Width="27"
-                                    Height="26"
-                                    Margin="0,0,5,0"
-                                    RenderOptions.BitmapScalingMode="Fant"
-                                    Source="Icons\game\AllModIcons_I10.png" />
-
-                                <Label
-                                    HorizontalContentAlignment="Center"
-                                    VerticalContentAlignment="Center"
-                                    Content="Sync Equipped"
-                                    FontWeight="Medium" />
+                                <Image Width="27" Height="26" Margin="0,0,5,0" RenderOptions.BitmapScalingMode="Fant" Source="Icons\game\AllModIcons_I10.png" />
+                                <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Sync Equipped" FontWeight="Medium" />
                             </StackPanel>
                         </Button>
 
-                        <Button Name="SyncAllBtn" Click="SyncAllBtn_Click">
+                        <Button Name="SyncAllBtn" Click="SyncAllBtn_Click" BorderThickness="0" HorizontalAlignment="Left">
                             <StackPanel Orientation="Horizontal">
-                                <Image
-                                    Width="27"
-                                    Height="26"
-                                    Margin="0,0,5,0"
-                                    RenderOptions.BitmapScalingMode="Fant"
-                                    Source="Icons\game\AllModIcons_I12.png" />
-
-                                <Label
-                                    HorizontalContentAlignment="Center"
-                                    VerticalContentAlignment="Center"
-                                    Content="Sync All"
-                                    FontWeight="Medium" />
+                                <Image Width="27" Height="26" Margin="0,0,5,0" RenderOptions.BitmapScalingMode="Fant" Source="Icons\game\AllModIcons_I12.png" />
+                                <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Sync All" FontWeight="Medium" />
                             </StackPanel>
                         </Button>
-                    </ToolBar>
+                    </DockPanel>
 
                     <Grid
                         Width="275"
@@ -1057,17 +888,9 @@
                                                             HorizontalAlignment="Stretch"
                                                             VerticalAlignment="Stretch"
                                                             Background="{DynamicResource {x:Static adonisUi:Brushes.Layer2BackgroundBrush}}">
-                                                            <Expander
-                                                                Margin="5,5,0,0"
-                                                                Background="Transparent"
-                                                                IsExpanded="True"
-                                                                IsTabStop="False">
+                                                            <Expander Margin="5,5,0,0" Background="Transparent" IsExpanded="True" IsTabStop="False">
                                                                 <Expander.Header>
-                                                                    <TextBlock
-                                                                        Background="Transparent"
-                                                                        FontSize="15"
-                                                                        FontWeight="Bold"
-                                                                        Text="{Binding Path=Name}" />
+                                                                    <TextBlock Background="Transparent" FontSize="15" FontWeight="Bold" Text="{Binding Path=Name}" />
                                                                 </Expander.Header>
 
                                                                 <ItemsPresenter Margin="0,5,0,0" />
@@ -1099,29 +922,22 @@
                                 <KeyBinding Command="{x:Static local:MainWindow.DeleteCommand}" Gesture="Delete" />
                             </ListView.InputBindings>
 
-
                             <ListView.ContextMenu>
                                 <ContextMenu>
                                     <MenuItem Command="Copy">
                                         <MenuItem.Icon>
-                                            <Image
-                                                Width="16"
-                                                Height="16"
-                                                Source="Icons\fugue\document-copy.png" />
+                                            <Image Width="16" Height="16" Source="Icons\fugue\document-copy.png" />
                                         </MenuItem.Icon>
 
                                         <MenuItem.Header>Copy Code</MenuItem.Header>
-
                                         <MenuItem.InputGestureText>Ctrl+C</MenuItem.InputGestureText>
                                     </MenuItem>
 
                                     <MenuItem Command="{x:Static local:MainWindow.DuplicateCommand}">
                                         <MenuItem.Icon>
-                                            <Image
-                                                Width="16"
-                                                Height="16"
-                                                Source="Icons\fugue\documents-stack.png" />
+                                            <Image Width="16" Height="16" Source="Icons\fugue\documents-stack.png" />
                                         </MenuItem.Icon>
+
                                         <MenuItem.Header>Duplicate Item</MenuItem.Header>
                                         <MenuItem.InputGestureText>Ctrl+D</MenuItem.InputGestureText>
                                     </MenuItem>
@@ -1130,14 +946,10 @@
 
                                     <MenuItem Command="{x:Static local:MainWindow.DeleteCommand}">
                                         <MenuItem.Icon>
-                                            <Image
-                                                Width="16"
-                                                Height="16"
-                                                Source="Icons\fugue\cross-script.png" />
+                                            <Image Width="16" Height="16" Source="Icons\fugue\cross-script.png" />
                                         </MenuItem.Icon>
 
                                         <MenuItem.Header>Delete Item</MenuItem.Header>
-
                                         <MenuItem.InputGestureText>Delete</MenuItem.InputGestureText>
                                     </MenuItem>
                                 </ContextMenu>
@@ -1151,21 +963,14 @@
                         </ListView>
                     </Grid>
 
-                    <Grid
-                        Name="SerialContentsGrid"
-                        Margin="275,45,0,0"
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Stretch">
+                    <Grid Name="SerialContentsGrid" Margin="275,45,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                         <ScrollViewer
                             Margin="0,-10,0,0"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
                             HorizontalScrollBarVisibility="Disabled"
                             VerticalScrollBarVisibility="Disabled">
-                            <Grid
-                                HorizontalAlignment="Stretch"
-                                VerticalAlignment="Stretch"
-                                IsEnabled="{Binding Path=SelectedSerial.InventoryKey, TargetNullValue=False}">
+                            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsEnabled="{Binding Path=SelectedSerial.InventoryKey, TargetNullValue=False}">
                                 <Label
                                     Width="100"
                                     Height="25"
@@ -1184,12 +989,23 @@
                                     Minimum="0"
                                     Value="{Binding Path=SelectedSerial.Level}" />
 
-                                <ComboBox
-                                    Margin="115,60,104,0"
+                                <Label
+                                    Width="100"
+                                    Height="27"
+                                    Margin="10,31,0,0"
+                                    HorizontalAlignment="Left"
                                     VerticalAlignment="Top"
-                                    IsEnabled="{Binding Path=SelectedSerial.InventoryKey, TargetNullValue=False}"
-                                    ItemsSource="{Binding ValidBalances}"
-                                    SelectedValue="{Binding SelectedBalance, Mode=TwoWay}" />
+                                    VerticalContentAlignment="Center"
+                                    Content="Item Type: "
+                                    FontWeight="Normal" />
+
+                                <ComboBox
+                                    Name="cbItemType"
+                                    Margin="115,31,10,0"
+                                    VerticalAlignment="Top"
+                                    IsEnabled="{Binding SelectedSerial.InventoryKey, TargetNullValue=False}"
+                                    ItemsSource="{Binding ValidItemTypes}"
+                                    SelectedValue="{Binding SelectedItemTypes, Mode=TwoWay}" />
 
                                 <Label
                                     Width="100"
@@ -1201,23 +1017,22 @@
                                     Content="Item Balance: "
                                     FontWeight="Normal" />
 
-                                <Label
-                                    Width="100"
-                                    Height="24"
-                                    Margin="10,118,0,0"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Top"
-                                    VerticalContentAlignment="Center"
-                                    Content="Manufacturer: "
-                                    FontWeight="Normal" />
-
                                 <ComboBox
-                                    Margin="115,118,10,0"
-                                    HorizontalAlignment="Stretch"
+                                    Margin="115,60,104,0"
                                     VerticalAlignment="Top"
                                     IsEnabled="{Binding Path=SelectedSerial.InventoryKey, TargetNullValue=False}"
-                                    ItemsSource="{Binding ValidManufacturers}"
-                                    SelectedValue="{Binding SelectedManufacturer, Mode=TwoWay}" />
+                                    ItemsSource="{Binding ValidBalances}"
+                                    SelectedValue="{Binding SelectedBalance, Mode=TwoWay}" />
+
+                                <Button
+                                    Name="ChangeTypeBtn"
+                                    Width="89"
+                                    Margin="0,60,10,0"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Top"
+                                    Click="ChangeTypeBtn_Click"
+                                    Content="Edit Balance"
+                                    IsEnabled="{Binding Path=SelectedSerial.InventoryKey, TargetNullValue=False}" />
 
                                 <Label
                                     Width="100"
@@ -1243,15 +1058,23 @@
                                     </ComboBox.ItemsPanel>
                                 </ComboBox>
 
-                                <Button
-                                    Name="ChangeTypeBtn"
-                                    Width="89"
-                                    Margin="0,60,10,0"
-                                    HorizontalAlignment="Right"
+                                <Label
+                                    Width="100"
+                                    Height="24"
+                                    Margin="10,118,0,0"
+                                    HorizontalAlignment="Left"
                                     VerticalAlignment="Top"
-                                    Click="ChangeTypeBtn_Click"
-                                    Content="Edit Balance"
-                                    IsEnabled="{Binding Path=SelectedSerial.InventoryKey, TargetNullValue=False}" />
+                                    VerticalContentAlignment="Center"
+                                    Content="Manufacturer: "
+                                    FontWeight="Normal" />
+
+                                <ComboBox
+                                    Margin="115,118,10,0"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Top"
+                                    IsEnabled="{Binding Path=SelectedSerial.InventoryKey, TargetNullValue=False}"
+                                    ItemsSource="{Binding ValidManufacturers}"
+                                    SelectedValue="{Binding SelectedManufacturer, Mode=TwoWay}" />
 
                                 <CheckBox
                                     Name="ForceLegitPartsChkBox"
@@ -1264,11 +1087,7 @@
                                     IsChecked="{Binding Path=ForceLegitParts, Mode=TwoWay}"
                                     IsEnabled="False" />
 
-                                <Grid
-                                    Margin="10,168,0,0"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Stretch"
-                                    Background="Transparent">
+                                <Grid Margin="10,168,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent">
                                     <Grid.Resources>
                                         <helpers:SerialPartConverter x:Key="MainPartConverter1" />
 
@@ -1277,6 +1096,7 @@
                                                 <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
                                                 <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Visible" />
                                                 <Setter Property="adonisExtensions:LayerExtension.IncreaseLayer" Value="True" />
+
                                                 <Setter Property="ItemContainerStyle">
                                                     <Setter.Value>
                                                         <Style TargetType="{x:Type ListViewItem}">
@@ -1286,6 +1106,7 @@
                                                         </Style>
                                                     </Setter.Value>
                                                 </Setter>
+
                                                 <Setter Property="Background" Value="{DynamicResource {x:Static adonisUi:Brushes.Layer2BackgroundBrush}}" />
                                             </Style.Setters>
                                         </Style>
@@ -1328,19 +1149,39 @@
                                                 <helpers:CalcConverter x:Key="CalcConverter" />
                                             </ListView.Resources>
 
+                                            <ListView.ItemContainerStyle>
+                                                <Style TargetType="ListViewItem">
+                                                    <Setter Property="Focusable" Value="false"/>
+                                                </Style>
+                                            </ListView.ItemContainerStyle>
+
                                             <ListView.ItemTemplate>
                                                 <DataTemplate>
                                                     <VirtualizingStackPanel Orientation="Horizontal">
+                                                        <CheckBox Width="20" Click="CheckBox_Click" />
+
+                                                        <Button Name="PartsDupBtn" Click="DuplicateItemPartBtn_Click" Margin="0,0,5,0">
+                                                            <Image Width="16" Height="16" RenderOptions.BitmapScalingMode="Fant" Source="Icons\fugue\document-copy.png" />
+                                                        </Button>
+
+                                                        <Button Name="PartsDelBtnSingle" Click="DeleteItemPartSingleBtn_Click" Margin="0,0,5,0">
+                                                            <Image Width="16" Height="16" RenderOptions.BitmapScalingMode="Fant" Source="Icons\fugue\cross-script.png" />
+                                                        </Button>
+
                                                         <ComboBox
-                                                            Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}, Path=ActualWidth, Converter={StaticResource CalcConverter}, ConverterParameter=Minus;25, Mode=OneWay}"
+                                                            Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}, Path=ActualWidth, Converter={StaticResource CalcConverter}, ConverterParameter=Minus;104, Mode=OneWay}"
                                                             HorizontalAlignment="Stretch"
                                                             VerticalAlignment="Top"
                                                             HorizontalContentAlignment="Left"
                                                             VerticalContentAlignment="Center"
-                                                            DropDownClosed="ComboBox_DropDownChanged"
-                                                            DropDownOpened="ComboBox_DropDownChanged"
                                                             ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}, Path=ValidParts}"
-                                                            SelectedValue="{Binding Path=., Mode=TwoWay}">
+                                                            SelectedValue="{Binding Path=., Mode=TwoWay}"
+                                                            ToolTip="{Binding Path=., Mode=OneWay}">
+                                                            <!--IsTextSearchEnabled="False"
+                                                            IsEditable="True"
+                                                            IsDropDownOpen="True"
+                                                            StaysOpenOnEdit="True"
+                                                            KeyUp="ComboBox_KeyUp">-->
                                                             <ComboBox.ItemsPanel>
                                                                 <ItemsPanelTemplate>
                                                                     <VirtualizingStackPanel
@@ -1357,23 +1198,11 @@
                                     </Grid>
 
                                     <Button
-                                        Name="PartsDelBtn"
-                                        Grid.Column="0"
-                                        Width="75"
-                                        Height="24"
-                                        Margin="185,0,10,10"
-                                        HorizontalAlignment="Right"
-                                        VerticalAlignment="Bottom"
-                                        Click="DeleteItemPartBtn_Click"
-                                        Content="Delete"
-                                        IsEnabled="{Binding Path=SelectedSerial.InventoryKey, TargetNullValue=False}" />
-
-                                    <Button
                                         Name="PartsAddBtn"
                                         Grid.Column="0"
-                                        Width="68"
+                                        Width="38"
                                         Height="24"
-                                        Margin="0,0,202,10"
+                                        Margin="0,0,0,10"
                                         HorizontalAlignment="Left"
                                         VerticalAlignment="Bottom"
                                         Click="AddItemPartBtn_Click"
@@ -1381,13 +1210,54 @@
                                         <Button.IsEnabled>
                                             <MultiBinding Converter="{StaticResource AndConverter1}">
                                                 <Binding Path="SelectedSerial.InventoryKey" TargetNullValue="False" />
-                                                <Binding
-                                                    Converter="{StaticResource IntegerLimiterConverter1}"
-                                                    ConverterParameter="63"
-                                                    Path="SelectedSerial.Parts.Count" />
+                                                <Binding Converter="{StaticResource IntegerLimiterConverter1}" ConverterParameter="63" Path="SelectedSerial.Parts.Count" />
                                             </MultiBinding>
                                         </Button.IsEnabled>
                                     </Button>
+
+                                    <Button
+                                        Name="PartsDelBtn"
+                                        Grid.Column="0"
+                                        Width="50"
+                                        Height="24"
+                                        Margin="48,0,0,10"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Bottom"
+                                        Click="DeleteItemPartBtn_Click"
+                                        Content="Delete">
+                                        <Button.IsEnabled>
+                                            <Binding Converter="{StaticResource IntegerLimiterConverter1}" ConverterParameter="0|min" Path="SelectedParts.Count" />
+                                        </Button.IsEnabled>
+                                    </Button>
+
+                                    <Button
+                                        Name="PartsDelAllBtn"
+                                        Grid.Column="0"
+                                        Width="67"
+                                        Height="24"
+                                        Margin="108,0,0,10"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Bottom"
+                                        Click="PartsDelAllBtn_Click"
+                                        Content="Delete All">
+                                        <Button.IsEnabled>
+                                            <MultiBinding Converter="{StaticResource AndConverter1}">
+                                                <Binding Path="SelectedSerial.InventoryKey" TargetNullValue="False" />
+                                                <Binding Converter="{StaticResource IntegerLimiterConverter1}" ConverterParameter="0|min" Path="SelectedSerial.Parts.Count" />
+                                            </MultiBinding>
+                                        </Button.IsEnabled>
+                                    </Button>
+
+                                    <Label
+                                        Name="GenericPartsLabel"
+                                        Grid.Column="1"
+                                        Height="16"
+                                        Margin="10,10,0,0"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Top"
+                                        HorizontalContentAlignment="Center"
+                                        Content="{Binding Path=SelectedSerial.GenericParts.Count}"
+                                        ContentStringFormat="Generic Parts ({0}/15)" />
 
                                     <Grid
                                         Grid.Column="1"
@@ -1406,19 +1276,39 @@
                                                 <helpers:CalcConverter x:Key="CalcConverter" />
                                             </ListView.Resources>
 
+                                            <ListView.ItemContainerStyle>
+                                                <Style TargetType="ListViewItem">
+                                                    <Setter Property="Focusable" Value="false"/>
+                                                </Style>
+                                            </ListView.ItemContainerStyle>
+
                                             <ListView.ItemTemplate>
                                                 <DataTemplate>
                                                     <VirtualizingStackPanel Orientation="Horizontal">
+                                                        <CheckBox Width="20" Click="GenericCheckBox_Click" />
+
+                                                        <Button Name="GenericPartsDupBtn" Click="DuplicateItemPartBtn_Click" Margin="0,0,5,0">
+                                                            <Image Width="16" Height="16" RenderOptions.BitmapScalingMode="Fant" Source="Icons\fugue\document-copy.png" />
+                                                        </Button>
+
+                                                        <Button Name="GenericPartsDelBtnSingle" Click="DeleteItemPartSingleBtn_Click" Margin="0,0,5,0">
+                                                            <Image Width="16" Height="16" RenderOptions.BitmapScalingMode="Fant" Source="Icons\fugue\cross-script.png" />
+                                                        </Button>
+
                                                         <ComboBox
-                                                            Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}, Path=ActualWidth, Converter={StaticResource CalcConverter}, ConverterParameter=Minus;25, Mode=OneWay}"
+                                                            Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}, Path=ActualWidth, Converter={StaticResource CalcConverter}, ConverterParameter=Minus;104, Mode=OneWay}"
                                                             HorizontalAlignment="Stretch"
                                                             VerticalAlignment="Top"
                                                             HorizontalContentAlignment="Left"
                                                             VerticalContentAlignment="Center"
-                                                            DropDownClosed="ComboBox_DropDownChanged"
-                                                            DropDownOpened="ComboBox_DropDownChanged"
                                                             ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}, Path=ValidGenerics}"
-                                                            SelectedValue="{Binding Path=.}">
+                                                            SelectedValue="{Binding Path=.}"
+                                                            ToolTip="{Binding Path=., Mode=OneWay}">
+                                                            <!--IsTextSearchEnabled="False"
+                                                            IsEditable="True"
+                                                            IsDropDownOpen="True"
+                                                            StaysOpenOnEdit="True"
+                                                            KeyUp="ComboBox_KeyUp">-->
                                                             <ComboBox.ItemsPanel>
                                                                 <ItemsPanelTemplate>
                                                                     <VirtualizingStackPanel
@@ -1435,23 +1325,11 @@
                                     </Grid>
 
                                     <Button
-                                        Name="GenericPartsDelBtn"
-                                        Grid.Column="1"
-                                        Width="75"
-                                        Height="24"
-                                        Margin="195,0,0,10"
-                                        HorizontalAlignment="Right"
-                                        VerticalAlignment="Bottom"
-                                        Click="DeleteItemPartBtn_Click"
-                                        Content="Delete"
-                                        IsEnabled="{Binding Path=SelectedSerial.InventoryKey, TargetNullValue=False}" />
-
-                                    <Button
                                         Name="GenericPartsAddBtn"
                                         Grid.Column="1"
-                                        Width="68"
+                                        Width="38"
                                         Height="24"
-                                        Margin="10,0,192,10"
+                                        Margin="10,0,0,10"
                                         HorizontalAlignment="Left"
                                         VerticalAlignment="Bottom"
                                         Click="AddItemPartBtn_Click"
@@ -1459,55 +1337,48 @@
                                         <Button.IsEnabled>
                                             <MultiBinding Converter="{StaticResource AndConverter1}">
                                                 <Binding Path="SelectedSerial.InventoryKey" TargetNullValue="False" />
-                                                <Binding
-                                                    Converter="{StaticResource IntegerLimiterConverter1}"
-                                                    ConverterParameter="15"
-                                                    Path="SelectedSerial.GenericParts.Count" />
-                                                <Binding
-                                                    Converter="{StaticResource IntegerLimiterConverter1}"
-                                                    ConverterParameter="0|min"
-                                                    Path="ValidGenerics.Count" />
+                                                <Binding Converter="{StaticResource IntegerLimiterConverter1}" ConverterParameter="15" Path="SelectedSerial.GenericParts.Count" />
+                                                <Binding Converter="{StaticResource IntegerLimiterConverter1}" ConverterParameter="0|min" Path="ValidGenerics.Count" />
                                             </MultiBinding>
                                         </Button.IsEnabled>
                                     </Button>
 
-                                    <Label
-                                        Name="GenericPartsLabel"
-                                        Grid.Column="1"
-                                        Height="16"
-                                        Margin="10,10,0,0"
-                                        HorizontalAlignment="Stretch"
-                                        VerticalAlignment="Top"
-                                        HorizontalContentAlignment="Center"
-                                        Content="{Binding Path=SelectedSerial.GenericParts.Count}"
-                                        ContentStringFormat="Generic Parts ({0}/15)" />
-                                    <Label
-                                        Width="100"
-                                        Height="27"
-                                        Margin="0,-136,0,0"
-                                        HorizontalAlignment="Left"
-                                        VerticalAlignment="Top"
-                                        VerticalContentAlignment="Center"
-                                        Content="Item Type: "
-                                        FontWeight="Normal" />
-                                    <ComboBox
-                                        Name="cbItemType"
-                                        Margin="105,-137,20,0"
-                                        VerticalAlignment="Top"
-                                        IsEnabled="{Binding SelectedSerial.InventoryKey, TargetNullValue=False}"
-                                        ItemsSource="{Binding ValidItemTypes}"
-                                        SelectedValue="{Binding SelectedItemTypes, Mode=TwoWay}" />
                                     <Button
-                                        x:Name="PartsDupBtn"
-                                        Grid.Column="0"
-                                        Width="75"
+                                        Name="GenericPartsDelBtn"
+                                        Grid.Column="1"
+                                        Width="50"
                                         Height="24"
-                                        Margin="0,0,102,10"
-                                        HorizontalAlignment="Right"
+                                        Margin="58,0,0,10"
+                                        HorizontalAlignment="Left"
                                         VerticalAlignment="Bottom"
-                                        Click="DuplicateItemPartBtn_Click"
-                                        Content="Duplicate"
-                                        IsEnabled="{Binding SelectedSerial.InventoryKey, TargetNullValue=False}" />
+                                        Click="DeleteItemPartBtn_Click"
+                                        Content="Delete"
+                                        >
+                                        <Button.IsEnabled>
+                                            <MultiBinding Converter="{StaticResource AndConverter1}">
+                                                <Binding Path="SelectedSerial.InventoryKey" TargetNullValue="False" />
+                                                <Binding Converter="{StaticResource IntegerLimiterConverter1}" ConverterParameter="0|min" Path="GenericSelectedParts.Count" />
+                                            </MultiBinding>
+                                        </Button.IsEnabled>
+                                    </Button>
+
+                                    <Button
+                                        x:Name="GenericPartsDelAllBtn"
+                                        Grid.Column="1"
+                                        Width="67"
+                                        Height="24"
+                                        Margin="118,0,0,10"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Bottom"
+                                        Click="PartsDelAllBtn_Click"
+                                        Content="Delete All">
+                                        <Button.IsEnabled>
+                                            <MultiBinding Converter="{StaticResource AndConverter1}">
+                                                <Binding Path="SelectedSerial.InventoryKey" TargetNullValue="False" />
+                                                <Binding Converter="{StaticResource IntegerLimiterConverter1}" ConverterParameter="0|min" Path="SelectedSerial.GenericParts.Count" />
+                                            </MultiBinding>
+                                        </Button.IsEnabled>
+                                    </Button>
                                 </Grid>
                             </Grid>
                         </ScrollViewer>
@@ -1515,24 +1386,11 @@
                 </Grid>
             </TabItem>
 
-            <TabItem
-                Name="RawTabItem"
-                HorizontalAlignment="Left"
-                IsEnabled="False">
+            <TabItem Name="RawTabItem" HorizontalAlignment="Left" IsEnabled="False">
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
-                        <Image
-                            Width="28"
-                            Height="26"
-                            Margin="0,0,5,0"
-                            RenderOptions.BitmapScalingMode="Fant"
-                            Source="Icons\game\MinimapIcon_MiniBoss.png" />
-
-                        <Label
-                            HorizontalContentAlignment="Center"
-                            VerticalContentAlignment="Center"
-                            Content="Raw"
-                            FontWeight="Medium" />
+                        <Image Width="28" Height="26" Margin="0,0,5,0" RenderOptions.BitmapScalingMode="Fant" Source="Icons\game\MinimapIcon_MiniBoss.png" />
+                        <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Raw" FontWeight="Medium" />
                     </StackPanel>
                 </TabItem.Header>
 
@@ -1566,25 +1424,12 @@
             <TabItem HorizontalAlignment="Left" IsEnabled="{Binding Profile, TargetNullValue=False}">
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
-                        <Image
-                            Width="27"
-                            Height="26"
-                            Margin="0,0,5,0"
-                            RenderOptions.BitmapScalingMode="Fant"
-                            Source="Icons\game\MinimapIcon_Respawn.png" />
-
-                        <Label
-                            HorizontalContentAlignment="Center"
-                            VerticalContentAlignment="Center"
-                            Content="Profile"
-                            FontWeight="Medium" />
+                        <Image Width="27" Height="26" Margin="0,0,5,0" RenderOptions.BitmapScalingMode="Fant" Source="Icons\game\MinimapIcon_Respawn.png" />
+                        <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Profile" FontWeight="Medium" />
                     </StackPanel>
                 </TabItem.Header>
 
-                <Grid
-                    Margin="8"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch">
+                <Grid Margin="8" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
@@ -1598,11 +1443,7 @@
 
                             <GroupBox VerticalAlignment="Top">
                                 <Grid>
-                                    <Label
-                                        Height="18"
-                                        HorizontalAlignment="Stretch"
-                                        VerticalAlignment="Top"
-                                        Content="Myth Rank Stats" />
+                                    <Label Height="18" HorizontalAlignment="Stretch" VerticalAlignment="Top" Content="Myth Rank Stats" />
 
                                     <ScrollViewer Margin="0,26,0,0">
                                         <Grid>
@@ -2208,11 +2049,7 @@
 
                             <GroupBox VerticalAlignment="Top">
                                 <Grid>
-                                    <Label
-                                        Height="18"
-                                        HorizontalAlignment="Stretch"
-                                        VerticalAlignment="Top"
-                                        Content="Currencies" />
+                                    <Label Height="18" HorizontalAlignment="Stretch" VerticalAlignment="Top" Content="Currencies" />
 
                                     <Grid Margin="0,20,0,0" VerticalAlignment="Top">
                                         <Label
@@ -2238,11 +2075,7 @@
 
                             <GroupBox Grid.Row="1" VerticalAlignment="Top">
                                 <Grid>
-                                    <Label
-                                        Height="18"
-                                        HorizontalAlignment="Stretch"
-                                        VerticalAlignment="Top"
-                                        Content="SDUs" />
+                                    <Label Height="18" HorizontalAlignment="Stretch" VerticalAlignment="Top" Content="SDUs" />
 
                                     <Grid Margin="0,20,0,0" VerticalAlignment="Top">
                                         <Label
@@ -2290,11 +2123,7 @@
 
                             <GroupBox Grid.Row="2" VerticalAlignment="Top">
                                 <Grid>
-                                    <Label
-                                        Height="18"
-                                        HorizontalAlignment="Stretch"
-                                        VerticalAlignment="Top"
-                                        Content="Customizations" />
+                                    <Label Height="18" HorizontalAlignment="Stretch" VerticalAlignment="Top" Content="Customizations" />
 
                                     <Grid Margin="0,20,0,0" VerticalAlignment="Top">
                                         <Button
@@ -2329,18 +2158,8 @@
             <TabItem HorizontalAlignment="Left">
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
-                        <Image
-                            Width="27"
-                            Height="26"
-                            Margin="0,0,5,0"
-                            RenderOptions.BitmapScalingMode="Fant"
-                            Source="Icons\game\MissionIcon_TurnIn.png" />
-
-                        <Label
-                            HorizontalContentAlignment="Center"
-                            VerticalContentAlignment="Center"
-                            Content="About"
-                            FontWeight="Medium" />
+                        <Image Width="27" Height="26" Margin="0,0,5,0" RenderOptions.BitmapScalingMode="Fant" Source="Icons\game\MissionIcon_TurnIn.png" />
+                        <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="About" FontWeight="Medium" />
                     </StackPanel>
                 </TabItem.Header>
 
@@ -2352,27 +2171,16 @@
 
                     <Grid>
                         <WrapPanel Orientation="Vertical">
-                            <TextBlock
-                                Margin="0,0,0,16"
-                                FontSize="13"
-                                TextWrapping="Wrap">
+                            <TextBlock Margin="0,0,0,16" FontSize="13" TextWrapping="Wrap">
                                 <Run Text="Developed by" />
 
-                                <Hyperlink
-                                    Foreground="{StaticResource awt}"
-                                    NavigateUri="https://github.com/jokarwent"
-                                    RequestNavigate="Hyperlink_RequestNavigate"
-                                    TextDecorations="Underline">
+                                <Hyperlink Foreground="{StaticResource awt}" NavigateUri="https://github.com/jokarwent" RequestNavigate="Hyperlink_RequestNavigate" TextDecorations="Underline">
                                     <Run Text="Arwent" />
                                 </Hyperlink>
 
                                 <Run Text="using" />
 
-                                <Hyperlink
-                                    Foreground="{StaticResource fdh}"
-                                    NavigateUri="http://fdh.one"
-                                    RequestNavigate="Hyperlink_RequestNavigate"
-                                    TextDecorations="Underline">
+                                <Hyperlink Foreground="{StaticResource fdh}" NavigateUri="http://fdh.one" RequestNavigate="Hyperlink_RequestNavigate" TextDecorations="Underline">
                                     <Run Text="FromDarkHell's" />
                                 </Hyperlink>
 
@@ -2380,32 +2188,36 @@
 
                                 <LineBreak />
                                 <LineBreak />
+                                
                                 <Run Text="Huge thanks to FromDarkHell, without him I'll not be able to make this save and profile editor." />
+                                
                                 <LineBreak />
+                                
                                 <Run Text="Thanks to apocalyptech, raptor/cfi2017, c0dycode, apple1417, LostInCompression and DOMIN8 for their contribution from BL3 Save Editor." />
+                                
                                 <LineBreak />
+                                
                                 <Run Text="Thanks to Gibbed for inventory serial database and protobufs." />
+                                
                                 <LineBreak />
                                 <LineBreak />
+                                
                                 <Run Text="If you are searching a Cheat Engine table, I suggest you the" />
-                                <Hyperlink
-                                    Foreground="LightBlue"
-                                    NavigateUri="https://opencheattables.org/viewtopic.php?f=12&amp;t=726"
-                                    RequestNavigate="Hyperlink_RequestNavigate"
-                                    TextDecorations="Underline">
+                                
+                                <Hyperlink Foreground="LightBlue" NavigateUri="https://opencheattables.org/viewtopic.php?f=12&amp;t=726" RequestNavigate="Hyperlink_RequestNavigate" TextDecorations="Underline">
                                     <Run Text="Kraqur's" />
                                 </Hyperlink>
+                                
                                 <Run Text="one which is the most advanced cheat table at this time." />
                                 <Run Text="Huge thanks to him and his work for being the one of the first table few days after game release." />
+                                
                                 <LineBreak />
                                 <LineBreak />
+                                
                                 <Run Text="Thanks to Gearbox Software, for this lovely roleplay adventure I've liked." />
                             </TextBlock>
 
-                            <TextBlock
-                                FontSize="13"
-                                Foreground="Red"
-                                TextWrapping="Wrap">
+                            <TextBlock FontSize="13" Foreground="Red" TextWrapping="Wrap">
                                 <Run FontWeight="Black">WARNING</Run>
                                 <Run>This software is still a work in progress.</Run>
                                 <Run>A lot of features are not present and saved games can be corrupted by using it.</Run>
@@ -2414,6 +2226,7 @@
                                 <Run>, Kraqurjack's Community, OpenCheatTables and I will</Run>
                                 <Run FontWeight="Black">NOT BE RESPONSIBLE</Run>
                                 <Run>if you break your game.</Run>
+                                
                                 <LineBreak />
                             </TextBlock>
 
@@ -2432,12 +2245,7 @@
                                 ContentStringFormat="Version: {0}"
                                 FontWeight="Normal" />
 
-                            <Button
-                                Name="btnUpdate"
-                                Width="120"
-                                Margin="0,0,0,8"
-                                Click="UpdateButton_Click"
-                                Content="Check For Updates" />
+                            <Button Name="btnUpdate" Width="120" Margin="0,0,0,8" Click="UpdateButton_Click" Content="Check For Updates" />
 
                             <CheckBox
                                 Name="DarkModeBox"
@@ -2450,6 +2258,7 @@
                                 Content="Enable Dark Mode"
                                 IsChecked="True"
                                 Unchecked="DarkModeBox_Checked" />
+
                             <CheckBox
                                 x:Name="ReduxMode"
                                 Width="130"

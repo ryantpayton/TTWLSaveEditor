@@ -683,6 +683,7 @@ namespace WonderlandsSaveEditor.Helpers
             chx = (Character)value;
             string slot = (string)parameter;
             var slotToEdit = GetEquippedSlotForName(slot);
+            if (slotToEdit == null) return false;
 
             return slotToEdit.Enabled;
         }

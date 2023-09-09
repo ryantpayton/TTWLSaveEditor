@@ -1,8 +1,5 @@
 ﻿using AdonisUI;
 using AutoUpdaterDotNET;
-using WonderlandsTools;
-using WonderlandsTools.GameData;
-using WonderlandsTools.GameData.Items;
 using Microsoft.Win32;
 using OakSave;
 using System;
@@ -21,6 +18,9 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Navigation;
 using WonderlandsSaveEditor.Helpers;
+using WonderlandsTools;
+using WonderlandsTools.GameData;
+using WonderlandsTools.GameData.Items;
 using Xceed.Wpf.Toolkit;
 using MessageBox = AdonisUI.Controls.MessageBox;
 using MessageBoxButton = AdonisUI.Controls.MessageBoxButton;
@@ -396,6 +396,10 @@ namespace WonderlandsSaveEditor
                 IntegerUpDown iudChaosCurrent = (IntegerUpDown)FindName("ChaosCurrentLevel");
                 iudChaosCurrent.Maximum = 10;
             }
+
+            // Initialize selected parts list
+            SelectedParts = new List<string>();
+            GenericSelectedParts = new List<string>();
 
             ((TabControl)FindName("TabCntrl")).SelectedIndex = ((TabControl)FindName("TabCntrl")).Items.Count - 1;
 
@@ -877,6 +881,20 @@ namespace WonderlandsSaveEditor
             addPartBtn = (Button)FindName("PartsAddBtn");
             addPartBtn.DataContext = null;
             addPartBtn.DataContext = this;
+
+            Button delPartBtn = (Button)FindName("GenericPartsDelBtn");
+            delPartBtn.DataContext = null;
+            delPartBtn.DataContext = this;
+            delPartBtn = (Button)FindName("PartsDelBtn");
+            delPartBtn.DataContext = null;
+            delPartBtn.DataContext = this;
+
+            Button delAllPartBtn = (Button)FindName("GenericPartsDelAllBtn");
+            delAllPartBtn.DataContext = null;
+            delAllPartBtn.DataContext = this;
+            delAllPartBtn = (Button)FindName("PartsDelAllBtn");
+            delAllPartBtn.DataContext = null;
+            delAllPartBtn.DataContext = this;
         }
 
         private void IntegerUpDown_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
@@ -889,7 +907,7 @@ namespace WonderlandsSaveEditor
 
         private void BackpackListView_Selected(object sender, EventArgs e)
         {
-            if (BackpackListView.Items.Count <= 1 || BackpackListView.SelectedValue == null)
+            if (BackpackListView.Items.Count < 1 || BackpackListView.SelectedValue == null)
                 return;
 
             ListView listView = (sender as ListView);
@@ -898,6 +916,10 @@ namespace WonderlandsSaveEditor
 
             // Scroll to the selected item (In case of duplication, etc.)
             listView.ScrollIntoView(listView.SelectedItem);
+
+            // Clear selected parts list
+            SelectedParts.Clear();
+            GenericSelectedParts.Clear();
 
             RefreshBackpackView();
         }
@@ -1066,7 +1088,7 @@ namespace WonderlandsSaveEditor
                 levelToSync = PlayerXP.GetLevelForPoints(SaveGame.Character.ExperiencePoints);
             }
 
-            foreach (WonderlandsSerial item in (Profile == null ? SaveGame.InventoryItems : Profile.BankItems))
+            foreach (WonderlandsSerial item in Profile == null ? SaveGame.InventoryItems : Profile.BankItems)
             {
                 Console.WriteLine($"Syncing level for item ({item.UserFriendlyName}) from {item.Level} to {levelToSync}");
 
@@ -1080,16 +1102,22 @@ namespace WonderlandsSaveEditor
         {
             string serialString = GetSelectedItemSerial();
 
+            if (serialString.Length == 0)
+                return;
+
             Console.WriteLine("Copying selected item code: {0}", serialString);
 
             string copyData = $"{SelectedSerial.UserFriendlyName}:\r\n{serialString}";
 
             // Copy it to the clipboard
-            Clipboard.SetDataObject(copyData);
+            Clipboard.SetDataObject(copyData, true);
         }
 
         private string GetSelectedItemSerial()
         {
+            if (BackpackListView.SelectedValue == null)
+                return "";
+
             StringSerialPair svp = (StringSerialPair)BackpackListView.SelectedValue;
             SelectedSerial = svp.Val2;
 
@@ -1105,6 +1133,9 @@ namespace WonderlandsSaveEditor
         private void DuplicateItem_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             string serialString = GetSelectedItemSerial();
+
+            if (serialString.Length == 0)
+                return;
 
             Console.WriteLine("Duplicating selected item code: {0}", serialString);
 
@@ -1195,7 +1226,7 @@ namespace WonderlandsSaveEditor
                 return;
 
             Button btn = (Button)sender;
-            ListView obj = ((ListView)FindName(btn.Name.Replace("AddBtn", "") + "ListView"));
+            ListView obj = (ListView)FindName(btn.Name.Replace("AddBtn", "") + "ListView");
             string propertyName = obj.Name.Split(new string[] { "ListView" }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
 
             if (propertyName == default)
@@ -1228,27 +1259,73 @@ namespace WonderlandsSaveEditor
 
             List<string> parts = (List<string>)SelectedSerial.GetType().GetProperty(propertyName).GetValue(SelectedSerial, null);
 
-            if (obj.SelectedIndex != -1)
-            {
-                string longName = parts[obj.SelectedIndex];
-                string category = propertyName == "Parts" ? SelectedSerial.InventoryKey : "InventoryGenericPartData";
-                string p = InventorySerialDatabase.GetPartFromShortName(category, longName);
+            string longName = parts.Find(x => x.EndsWith(btn.DataContext.ToString()));
+            string category = propertyName == "Parts" ? SelectedSerial.InventoryKey : "InventoryGenericPartData";
+            string p = InventorySerialDatabase.GetPartFromShortName(category, longName);
 
-                parts.Add(p);
+            parts.Add(p);
 
-                // Update the valid parts
-                ValidParts.Refresh();
-                ValidGenerics.Refresh();
+            // Update the valid parts
+            ValidParts.Refresh();
+            ValidGenerics.Refresh();
 
-                obj.GetBindingExpression(ItemsControl.ItemsSourceProperty).UpdateTarget();
-                RefreshBackpackView();
-            }
+            obj.GetBindingExpression(ItemsControl.ItemsSourceProperty).UpdateTarget();
+            RefreshBackpackView();
         }
 
         private void DeleteItemPartBtn_Click(object sender, RoutedEventArgs e)
         {
+            if (SelectedSerial == null)
+                return;
+
             Button btn = (Button)sender;
-            ListView obj = ((ListView)FindName(btn.Name.Replace("DelBtn", "") + "ListView"));
+            ListView obj = (ListView)FindName(btn.Name.Replace("DelBtn", "") + "ListView");
+            string propertyName = obj.Name.Split(new string[] { "ListView" }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+
+            if (propertyName == default)
+                return;
+
+            List<string> list = propertyName == "Parts" ? SelectedParts : GenericSelectedParts;
+
+            if (list.Count == 0) return;
+
+            List<string> parts = (List<string>)SelectedSerial.GetType().GetProperty(propertyName).GetValue(SelectedSerial, null);
+            List<string> selectedParts = new List<string>();
+
+            foreach (string part in parts)
+            {
+                string[] strings = part.Split('.');
+                string s = strings[strings.Length - 1];
+
+                if (list.Contains(s))
+                    selectedParts.Add(part);
+            }
+
+            foreach (string part in selectedParts)
+            {
+                // Remove the part
+                int index = parts.FindIndex(x => x.Equals(part));
+                parts.RemoveAt(index);
+            }
+
+            // Empty the selected parts since we are going to refresh the view
+            if (propertyName == "Parts") SelectedParts.Clear(); else GenericSelectedParts.Clear();
+
+            // Update the valid parts
+            ValidParts.Refresh();
+            ValidGenerics.Refresh();
+
+            obj.GetBindingExpression(ItemsControl.ItemsSourceProperty).UpdateTarget();
+            RefreshBackpackView();
+        }
+
+        private void DeleteItemPartSingleBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (SelectedSerial == null)
+                return;
+
+            Button btn = (Button)sender;
+            ListView obj = (ListView)FindName(btn.Name.Replace("DelBtnSingle", "") + "ListView");
             string propertyName = obj.Name.Split(new string[] { "ListView" }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
 
             if (propertyName == default)
@@ -1256,39 +1333,52 @@ namespace WonderlandsSaveEditor
 
             List<string> parts = (List<string>)SelectedSerial.GetType().GetProperty(propertyName).GetValue(SelectedSerial, null);
 
-            if (obj.SelectedIndex != -1)
+            foreach (string part in parts)
             {
-                string longName = parts[obj.SelectedIndex];
+                string[] strings = part.Split('.');
+                string s = strings[strings.Length - 1];
 
-                if (ForceLegitParts)
+                if (s == btn.DataContext.ToString())
                 {
-                    foreach (string part in parts)
-                    {
-                        List<string> dependencies = InventorySerialDatabase.GetDependenciesForPart(part);
-
-                        if (part != longName && dependencies.Contains(longName))
-                        {
-                            MessageBoxResult result = MessageBox.Show("Are you sure you want to delete this part? If you do that, you'll make the item illegitimate.", "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
-
-                            if (result == MessageBoxResult.No)
-                            {
-                                return;
-                            }
-                            else
-                            {
-                                // Update the force legit text box because they clearly don't want legit items
-                                ForceLegitParts = false;
-                                ForceLegitPartsChkBox.DataContext = null;
-                                ForceLegitPartsChkBox.DataContext = this;
-                                break;
-                            }
-                        }
-                    }
+                    parts.Remove(part);
+                    break;
                 }
-
-                // Remove the part
-                parts.RemoveAt(obj.SelectedIndex);
             }
+
+            // Update the valid parts
+            ValidParts.Refresh();
+            ValidGenerics.Refresh();
+
+            obj.GetBindingExpression(ItemsControl.ItemsSourceProperty).UpdateTarget();
+            RefreshBackpackView();
+        }
+
+        private void PartsDelAllBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (SelectedSerial == null)
+                return;
+
+            Button btn = (Button)sender;
+            ListView obj = (ListView)FindName(btn.Name.Replace("DelAllBtn", "") + "ListView");
+            string propertyName = obj.Name.Split(new string[] { "ListView" }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+
+            if (propertyName == default)
+                return;
+
+            List<string> parts = (List<string>)SelectedSerial.GetType().GetProperty(propertyName).GetValue(SelectedSerial, null);
+
+            while (parts.Count > 0)
+            {
+                // Remove the part
+                parts.RemoveAt(0);
+            }
+
+            // Empty the selected parts since we are going to refresh the view
+            if (propertyName == "GenericParts")
+                GenericSelectedParts.Clear();
+
+            if (propertyName == "Parts")
+                SelectedParts.Clear();
 
             // Update the valid parts
             ValidParts.Refresh();
@@ -1301,7 +1391,7 @@ namespace WonderlandsSaveEditor
         // This bit of logic is here so that way the ListView's selected value stays up to date with the ComboBox's selected value
         private void ComboBox_DropDownChanged(object sender, EventArgs e)
         {
-            ComboBox box = ((ComboBox)sender);
+            ComboBox box = (ComboBox)sender;
             ListView parent = box.FindParent<ListView>();
 
             if (parent == null)
@@ -1310,40 +1400,52 @@ namespace WonderlandsSaveEditor
             parent.SelectedValue = box.SelectedValue;
         }
 
-        private string GetSelectedPart(string type, object sender, SelectionChangedEventArgs e)
+        public List<string> SelectedParts { get; set; }
+
+        public List<string> GenericSelectedParts { get; set; }
+
+        private void CheckBox_Click(object sender, RoutedEventArgs e)
         {
-            if (e.Handled || e.RemovedItems.Count < 1)
-                return null;
+            CheckBox box = (CheckBox)sender;
+            string part = (string)box.DataContext;
+            bool addPart = box.IsChecked == true && !SelectedParts.Contains(part);
 
-            ComboBox box = ((ComboBox)sender);
+            if (addPart)
+                SelectedParts.Add(part);
+            else
+                SelectedParts.Remove(part);
 
-            // Get the last changed part and the new part
-            // Old part is useful so that way we don't end up doing weird index updating shenanigans when the ComboBox updates
-            string newPart = e.AddedItems.Cast<string>().FirstOrDefault();
-            string oldPart = e.RemovedItems.Cast<string>().FirstOrDefault();
+            Button delPartBtn = (Button)FindName("GenericPartsDelBtn");
+            delPartBtn.DataContext = null;
+            delPartBtn.DataContext = this;
+            delPartBtn = (Button)FindName("PartsDelBtn");
+            delPartBtn.DataContext = null;
+            delPartBtn.DataContext = this;
+        }
 
-            if (newPart == default || oldPart == default)
-                return null;
+        private void GenericCheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            CheckBox box = (CheckBox)sender;
+            string part = (string)box.DataContext;
+            bool addPart = box.IsChecked == true && !GenericSelectedParts.Contains(part);
 
-            Console.WriteLine($"Changed \"{oldPart}\" to \"{newPart}\"");
+            if (addPart)
+                GenericSelectedParts.Add(part);
+            else
+                GenericSelectedParts.Remove(part);
 
-            ListView parent = box.FindParent<ListView>();
-
-            if (parent.SelectedIndex == -1)
-                return null;
-
-            string assetCat = (type == "Parts" ? SelectedSerial.InventoryKey : "InventoryGenericPartData");
-            string fullName = InventorySerialDatabase.GetPartFromShortName(assetCat, newPart);
-
-            if (fullName == default)
-                fullName = newPart;
-
-            return fullName;
+            Button delPartBtn = (Button)FindName("GenericPartsDelBtn");
+            delPartBtn.DataContext = null;
+            delPartBtn.DataContext = this;
+            delPartBtn = (Button)FindName("PartsDelBtn");
+            delPartBtn.DataContext = null;
+            delPartBtn.DataContext = this;
         }
 
         private void ItemPart_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ListView parent = ((ComboBox)sender).FindParent<ListView>();
+            ComboBox box = (ComboBox)sender;
+            ListView parent = box.FindParent<ListView>();
 
             if (parent == null)
                 return;
@@ -1353,35 +1455,23 @@ namespace WonderlandsSaveEditor
             if (propertyName == default)
                 return;
 
-            string fullName = GetSelectedPart(propertyName, sender, e);
+            ListCollectionView list = propertyName == "Parts" ? ValidParts : ValidGenerics;
 
-            if (fullName == null)
+            if (e.Handled || e.RemovedItems.Count < 1)
                 return;
 
-            // Do some weird stuff in order to get the list of the value we've changed, so that way we can set the index.
-            List<string> parts = (List<string>)SelectedSerial.GetType().GetProperty(propertyName).GetValue(SelectedSerial, null);
+            // Get the last changed part and the new part
+            // Old part is useful so that way we don't end up doing weird index updating shenanigans when the ComboBox updates
+            string newPart = e.AddedItems.Cast<string>().FirstOrDefault();
+            string oldPart = e.RemovedItems.Cast<string>().FirstOrDefault();
 
-            // The selected index stays updated with the current ComboBox because of "ComboBox_DropDownChanged"
-            parts[parent.SelectedIndex] = fullName;
+            if (newPart == default || oldPart == default)
+                return;
 
-            if (ForceLegitParts)
-            {
-                List<string> dependantParts = InventorySerialDatabase.GetDependenciesForPart(fullName);
+            if (!list.Contains(newPart))
+                return;
 
-                if (dependantParts == null || dependantParts?.Count == 0)
-                    return;
-
-                if (parts.Any(x => dependantParts.Contains(x)))
-                {
-                    return;
-                }
-                else
-                {
-                    // Pick the first dependent part. This might not be what the user actually wants though.
-                    parts.Add(dependantParts.FirstOrDefault());
-                    RefreshBackpackView();
-                }
-            }
+            Console.WriteLine($"Changed \"{oldPart}\" to \"{newPart}\"");
         }
         #endregion
 
@@ -1533,6 +1623,24 @@ namespace WonderlandsSaveEditor
                     }
                 }
             }
+        }
+
+        private void ComboBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            ComboBox s = (ComboBox)sender;
+            CollectionView itemsViewOriginal = (CollectionView)CollectionViewSource.GetDefaultView(s.ItemsSource);
+
+            itemsViewOriginal.Filter = ((o) =>
+            {
+                if (String.IsNullOrEmpty(s.Text)) return true;
+                else
+                {
+                    if (((string)o).Contains(s.Text)) return true;
+                    else return false;
+                }
+            });
+
+            itemsViewOriginal.Refresh();
         }
     }
 }
